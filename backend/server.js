@@ -48,5 +48,6 @@ const r = await pool.query('SELECT source_text, translated_text FROM translation
 res.json(r.rows);
 });
 
-
-app.listen(3001, () => console.log('✅ Backend running on http://localhost:3001'));
+app.listen(3001, '0.0.0.0', () => {
+  console.log('✅ Backend running on http://localhost:3001');
+});

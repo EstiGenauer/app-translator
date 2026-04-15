@@ -47,6 +47,28 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+
+app.get('/ready', async (req, res) => {
+  try {
+    // בדיקת DB
+    await pool.query('SELECT 1');
+
+    res.json({
+      status: 'ready',
+      db: 'ok',
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (err) {
+    console.error('DB not ready:', err.message);
+
+    res.status(500).json({
+      status: 'not ready',
+      db: 'error'
+    });
+  }
+});
+
 app.get('/history', async (req, res) => {
 const r = await pool.query('SELECT source_text, translated_text FROM translations ORDER BY id DESC LIMIT 10');
 res.json(r.rows);

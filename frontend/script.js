@@ -1,6 +1,5 @@
 // אם אנחנו בתוך Docker Compose, נקרא ל-backend בשם השירות; אחרת localhost
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'http://backend:3001';
-
+const API_URL = '/api';
 const btn = document.getElementById('translateBtn');
 const source = document.getElementById('source');
 const target = document.getElementById('target');

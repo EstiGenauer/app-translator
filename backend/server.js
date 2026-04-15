@@ -43,6 +43,10 @@ res.json({ translatedText });
 });
 
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.get('/history', async (req, res) => {
 const r = await pool.query('SELECT source_text, translated_text FROM translations ORDER BY id DESC LIMIT 10');
 res.json(r.rows);

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: chayaado/app-translator-frontend:latest
+        image: estigenauer/app-frontend:latest
         ports:
         - containerPort: 80
         imagePullPolicy: IfNotPresent

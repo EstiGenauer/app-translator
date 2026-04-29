@@ -13,7 +13,6 @@ on:
       - 'backend/**'
       - '.github/workflows/ci-backend.yml'
 
-
 jobs:
  unit-tests:
    name: ci-backend1

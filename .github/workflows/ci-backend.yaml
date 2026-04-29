@@ -1,6 +1,19 @@
+name: ci-backend
+on:
+ push:
+   branches: [ci/cd , main]
+   paths:
+     - ./backend
+     - .github/workflows
+ pull_request:
+   branches: [ci/cd , main]
+   paths:
+      - ./backend
+      - .github/workflows
+
 jobs:
  unit-tests:
-   name: ci-backend
+   name: ci-backend1
    runs-on: ubuntu-latest
    steps:
      - uses: actions/checkout@v4
@@ -18,6 +31,6 @@ jobs:
        working-directory: ./backend
        run: npm test
     
-    
+  
      - name: Test summary
        run: echo "Unit Test secceded"

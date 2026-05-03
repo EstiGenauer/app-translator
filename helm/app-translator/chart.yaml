@@ -5,3 +5,7 @@ description: Application for translating text
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
+
+maintainers:
+  - name: Esti Genauer
+    email: genauer1997@gmail.com

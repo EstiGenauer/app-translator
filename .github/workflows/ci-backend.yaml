@@ -4,13 +4,13 @@ name: ci-backend
 
 on:
   push:
-    branches: [main, ci/cd]
+    branches: [main, ci-cd]
     paths:
       - 'app/backend/**'
       - '.github/workflows/ci-backend.yaml'  
 
   pull_request:
-    branches: [main, ci/cd]
+    branches: [main, ci-cd]
     paths:
       - 'app/backend/**'
       - '.github/workflows/ci-backend.yaml'

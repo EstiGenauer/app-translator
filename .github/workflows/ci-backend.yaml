@@ -102,6 +102,7 @@ integration-tests:
         if: always()
         run: docker compose -f docker-compose.test.yaml down -v
 
+
 # =========================
 # 4. PUSH TO DOCKERHUB
 # =========================

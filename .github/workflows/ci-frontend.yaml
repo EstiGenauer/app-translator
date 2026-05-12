@@ -1,7 +1,6 @@
+name: CI Frontend
 
-name:  ci frontend
-
-"on":
+on:
   push:
     branches: [main, ci-cd]
     paths:
@@ -9,9 +8,10 @@ name:  ci frontend
       - '.github/workflows/ci-frontend.yaml'
   pull_request:
     branches: [main, ci-cd]
-     paths:
+    paths:
       - 'frontend/**'
       - '.github/workflows/ci-frontend.yaml'
+
 permissions:
   id-token: write
   contents: read
@@ -32,12 +32,13 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
-      
+
       - name: Sync to S3
         run: |
           aws s3 sync frontend/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete

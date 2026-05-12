@@ -6,7 +6,7 @@ on:
   push:
     branches: [main, ci-cd]
     paths:
-      - 'app/backend/**'
+      - 'backend/**'
       - '.github/workflows/ci-backend.yaml'  
 
   pull_request:

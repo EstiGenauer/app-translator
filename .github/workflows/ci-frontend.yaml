@@ -1,8 +1,8 @@
-name: CI Frontend
+name: ci frontend
 
 on:
   push:
-    branches: [main, ci/cd]
+    branches: [main, ci-cd]
     paths:
       - 'frontend/**'
   pull_request:

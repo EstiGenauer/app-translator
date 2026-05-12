@@ -1,15 +1,17 @@
-name: ci frontend
 
-on:
+name:  ci frontend
+
+"on":
   push:
     branches: [main, ci-cd]
     paths:
       - 'frontend/**'
+      - '.github/workflows/ci-frontend.yaml'
   pull_request:
-    branches: [main]
-    paths:
+    branches: [main, ci-cd]
+     paths:
       - 'frontend/**'
-
+      - '.github/workflows/ci-frontend.yaml'
 permissions:
   id-token: write
   contents: read

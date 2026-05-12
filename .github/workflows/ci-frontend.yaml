@@ -3,12 +3,12 @@ on:
   push:
     branches: [main, ci-cd]
     paths:
-      - 'app/frontend/**'
+      - 'frontend/**'
       - '.github/workflows/ci-frontend.yaml'  
   pull_request:
     branches: [main, ci-cd]
     paths:
-      - 'app/frontend/**'
+      - 'frontend/**'
       - '.github/workflows/ci-frontend.yaml'
 permissions: 
   id-token: write

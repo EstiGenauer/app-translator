@@ -107,7 +107,7 @@ integration-tests:
 # =========================
 # 4. PUSH TO DOCKERHUB
 # =========================
-  
+
   push:
     name: Push to DockerHub
     runs-on: ubuntu-latest

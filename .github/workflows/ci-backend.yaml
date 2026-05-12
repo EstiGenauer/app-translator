@@ -12,7 +12,7 @@ on:
   pull_request:
     branches: [main, ci-cd]
     paths:
-      - 'app/backend/**'
+      - 'backend/**'
       - '.github/workflows/ci-backend.yaml'
 
 jobs:

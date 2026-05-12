@@ -3,22 +3,16 @@ kind: ConfigMap
 metadata:
   name: init-sql-config
 data:
-  init.sql: |
-    CREATE TABLE IF NOT EXISTS translations (
-    id SERIAL PRIMARY KEY,
-    source_text TEXT NOT NULL,
-    target_lang VARCHAR(10) NOT NULL,
-    translated_text TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT now()
-    );
+  init.sql: {{ .Values.Volume.init.sql | indent 4 }}
 ---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: db-config
 data:
-  POSTGRES_DB: "translations"
-  POSTGRES_USER: "postgres"
+  POSTGRES_DB: {{ .Values.database.name }}
+  POSTGRES_USER: {{ .Values.database.user }}
 ---
 apiVersion: v1
 kind: Secret
@@ -26,15 +20,15 @@ metadata:
   name: db-secret
 type: Opaque
 data:
-  POSTGRES_PASSWORD: cG9zdGdyZXM=  # postgres in base64
+  POSTGRES_PASSWORD: {{ .Values.database.password }} # postgres in base64
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
+  name: {{ .Values.database.name }}
 spec:
   serviceName: postgres-service
-  replicas: 1
+  replicas: {{ .Values.database.replicas }}
   selector:
     matchLabels:
       app: postgres
@@ -47,7 +41,8 @@ spec:
         kubernetes.io/hostname: minikube
       containers:
       - name: postgres
-        image: postgres:15-alpine
+        image: {{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}
+        imagePullPolicy: {{ .Values.database.image.PullPolicy }}
         ports:
         - containerPort: 5432
         env:
@@ -83,7 +78,7 @@ spec:
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 10Gi
+          storage: {{ .Values.database.storage }}
 ---
 apiVersion: v1
 kind: Service

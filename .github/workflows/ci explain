@@ -1,51 +1,69 @@
-הסבר על הCI :
-זרימת ה-CI ב-Backend שלך:
-Trigger (טריגר):
+# 🚀 הסבר על CI (Continuous Integration)
 
-מתחיל ברגע שאת עושה Push ל-Branch (כמו main או ci-cd) או פותחת Pull Request.
+## 🔁 זרימת ה-CI ב-Backend שלך
 
-Job 1: Unit Tests (בדיקות יחידה):
+---
 
-ה-Runner מתקין Node.js.
+## 1. Trigger (טריגר)
 
-מריץ npm install.
+התהליך מתחיל אוטומטית כאשר מתרחש אחד מהאירועים הבאים:
 
-מריץ npm test.
+- Push ל-Branch (כמו `main` או `ci-cd`)
+- פתיחת Pull Request
 
-מטרה: לוודא שהקוד הלוגי הבסיסי תקין לפני שממשיכים.
+---
 
-Job 2: Build Docker Image (בנייה):
+## 2. Job 1: Unit Tests (בדיקות יחידה)
 
-תלוי בהצלחת ה-Unit Tests (needs: unit-tests).
+בשלב זה:
 
-בונה אימג' דוקר מה-Dockerfile.
+- ה-Runner מתקין Node.js  
+- מריץ `npm install`  
+- מריץ `npm test`  
 
-משתמש ב-Cache (מטמון) כדי להאיץ את הבנייה בפעמים הבאות.
+**מטרה:** לוודא שהלוגיקה הבסיסית של הקוד תקינה לפני שממשיכים לשלבים הבאים.
 
-מריץ בדיקה מהירה שהאימג' בכלל עולה (node --version).
+---
 
-Job 3: Integration Tests (בדיקות אינטגרציה):
+## 3. Job 2: Build Docker Image (בנייה)
 
-תלוי בהצלחת ה-Build.
+שלב זה תלוי בהצלחה של Unit Tests (`needs: unit-tests`):
 
-מרים סביבה שלמה בעזרת Docker Compose (קונטיינר של ה-Backend וקונטיינר של Postgres).
+- בניית Docker Image מתוך ה-Dockerfile  
+- שימוש ב-Cache כדי לזרז בנייה עתידית  
+- הרצה של בדיקה מהירה לוודא שהאימג' עובד (למשל `node --version`)  
 
-מריץ בדיקות שבודקות את החיבור לבסיס הנתונים.
+---
 
-מנקה את הסביבה בסיום (docker compose down).
+## 4. Job 3: Integration Tests (בדיקות אינטגרציה)
 
-Job 4: Push to DockerHub (הפצה):
+שלב זה תלוי בהצלחת ה-Build:
 
-קורה רק אם הבדיקות עברו וזה ב-Branches המאושרים.
+- הרמת סביבה מלאה באמצעות Docker Compose  
+  (Backend + בסיס נתונים כמו Postgres)  
+- הרצת בדיקות שבודקות תקשורת עם בסיס הנתונים  
+- ניקוי הסביבה בסיום (`docker compose down`)  
 
-מתחבר ל-DockerHub עם ה-Secrets שלך.
+---
 
-דוחף את האימג' הסופי עם תגית latest ועם ה-SHA של ה-Commit.
+## 5. Job 4: Push to DockerHub (הפצה)
 
-Job 5: Tagging (גרסאות):
+שלב זה מתבצע רק אם כל הבדיקות עברו ובהתאם ל-branches מאושרים:
 
-השלב האחרון.
+- התחברות ל-DockerHub באמצעות Secrets  
+- העלאת ה-Docker Image הסופי  
+- שימוש ב-tags:
+  - `latest`
+  - SHA של ה-Commit  
 
-מחשב את מספר הגרסה הבא (למשל מ-v1.0.1 ל-v1.0.2).
+---
 
-יוצר Tag חדש ב-Git ודוחף אותו ל-GitHub.
+## 6. Job 5: Tagging (גרסאות)
+
+השלב האחרון בתהליך:
+
+- חישוב גרסת ה-Release הבאה (למשל `v1.0.1 → v1.0.2`)  
+- יצירת Tag חדש ב-Git  
+- Push של ה-Tag ל-GitHub  
+
+---

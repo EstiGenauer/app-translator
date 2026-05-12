@@ -82,7 +82,7 @@ integration-tests:
 
     if: |
       github.ref == 'refs/heads/main' ||
-      github.ref == 'refs/heads/ci/cd' ||
+      github.ref == 'refs/heads/ci-cd' ||
       github.event_name == 'pull_request'
 
     steps:

@@ -103,9 +103,11 @@ integration-tests:
         run: docker compose -f docker-compose.test.yaml down -v
 
 
+
 # =========================
 # 4. PUSH TO DOCKERHUB
 # =========================
+  
   push:
     name: Push to DockerHub
     runs-on: ubuntu-latest

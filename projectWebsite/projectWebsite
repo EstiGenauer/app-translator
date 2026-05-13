@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Translator — DevOps Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg2: #0f1520;
+    --bg3: #141c2e;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8eaf0;
+    --muted: #6b7a99;
+    --accent: #3d7cff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #f5a623;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,14,23,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--accent2);
+    letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 20% 50%, rgba(61,124,255,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 30%, rgba(0,212,170,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .grid-overlay {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at center, black 0%, transparent 100%);
+    pointer-events: none; opacity: 0.4;
+  }
+  .hero-content { position: relative; max-width: 800px; text-align: center; margin: 0 auto; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.75rem;
+    color: var(--accent2);
+    border: 1px solid rgba(0,212,170,0.3);
+    padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 2rem;
+    letter-spacing: 0.08em;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, #3d7cff, #00d4aa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+  }
+  .hero-stats {
+    display: flex; gap: 2.5rem; flex-wrap: wrap; justify-content: center;
+  }
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-family: var(--mono); font-size: 1.8rem; font-weight: 500;
+    color: var(--text);
+    background: linear-gradient(135deg, #3d7cff, #00d4aa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* SECTION */
+  section { padding: 5rem 4rem; }
+  .section-header { margin-bottom: 3rem; }
+  .section-label {
+    font-family: var(--mono); font-size: 0.72rem;
+    color: var(--accent); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--accent); opacity: 0.3; }
+  .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 600; letter-spacing: -0.01em; }
+
+  /* ARCHITECTURE */
+  .arch-section { background: var(--bg2); }
+  .arch-diagram {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .arch-diagram::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+  }
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .arch-box {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+  .arch-box:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .arch-box-icon {
+    font-size: 1.8rem; margin-bottom: 0.5rem;
+    display: block;
+  }
+  .arch-box-name { font-family: var(--mono); font-size: 0.8rem; color: var(--accent2); margin-bottom: 0.25rem; }
+  .arch-box-desc { font-size: 0.72rem; color: var(--muted); }
+  .arch-box-port {
+    position: absolute; top: -10px; right: 10px;
+    font-family: var(--mono); font-size: 0.6rem;
+    background: var(--accent); color: white;
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .arch-arrow {
+    text-align: center; color: var(--muted); font-size: 1.2rem;
+  }
+  .arch-network {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.75rem; color: var(--accent4);
+    margin-top: 1.5rem;
+    background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 8px; padding: 0.6rem 1rem;
+  }
+
+  /* PIPELINE */
+  .pipeline-section { background: var(--bg); }
+  .pipeline {
+    display: flex; gap: 0; align-items: stretch;
+    overflow-x: auto; padding-bottom: 1rem;
+  }
+  .pipeline-stage {
+    flex: 1; min-width: 160px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 1.5rem 1.25rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pipeline-stage:hover { background: var(--bg3); }
+  .pipeline-stage:first-child { border-radius: 12px 0 0 12px; }
+  .pipeline-stage:last-child { border-radius: 0 12px 12px 0; }
+  .pipeline-stage + .pipeline-stage { border-left: none; }
+  .stage-num {
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .stage-name {
+    font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .stage-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+  .stage-badge {
+    margin-top: 0.75rem; display: inline-block;
+    font-family: var(--mono); font-size: 0.6rem;
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .badge-test { background: rgba(0,212,170,0.12); color: var(--accent2); border: 1px solid rgba(0,212,170,0.3); }
+  .badge-build { background: rgba(61,124,255,0.12); color: var(--accent); border: 1px solid rgba(61,124,255,0.3); }
+  .badge-push { background: rgba(245,166,35,0.12); color: var(--accent4); border: 1px solid rgba(245,166,35,0.3); }
+  .badge-deploy { background: rgba(255,107,107,0.12); color: var(--accent3); border: 1px solid rgba(255,107,107,0.3); }
+  .arrow-connect {
+    position: absolute; right: -12px; top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: var(--bg2);
+    color: var(--accent);
+    font-size: 1rem; width: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* STEPS */
+  .steps-section { background: var(--bg2); }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+  .step-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .step-card:hover { border-color: var(--border2); }
+  .step-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .step-card.git::after { background: linear-gradient(90deg, #f34f29, #f97316); }
+  .step-card.docker::after { background: linear-gradient(90deg, #2496ed, #3d7cff); }
+  .step-card.compose::after { background: linear-gradient(90deg, #3d7cff, #00d4aa); }
+  .step-card.k8s::after { background: linear-gradient(90deg, #326ce5, #00d4aa); }
+  .step-card.helm::after { background: linear-gradient(90deg, #0f1689, #3d7cff); }
+  .step-card.ci::after { background: linear-gradient(90deg, #24292e, #6e5494); }
+  .step-num {
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--muted); margin-bottom: 0.75rem;
+  }
+  .step-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .step-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+  .step-tags { margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    font-family: var(--mono); font-size: 0.6rem;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* TECH STACK */
+  .tech-section { background: var(--bg); }
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+  .tech-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .tech-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .tech-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .tech-name { font-size: 0.78rem; font-weight: 500; margin-bottom: 0.2rem; }
+  .tech-cat { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
+
+  /* CODE BLOCK */
+  .code-section { background: var(--bg2); }
+  .code-tabs { display: flex; gap: 0; margin-bottom: 0; }
+  .code-tab {
+    font-family: var(--mono); font-size: 0.72rem;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: var(--bg3); color: var(--muted);
+    cursor: pointer; transition: background 0.2s, color 0.2s;
+    margin-right: 4px;
+  }
+  .code-tab.active { background: var(--bg); color: var(--accent2); }
+  .code-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0 12px 12px 12px;
+    padding: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    display: none;
+  }
+  .code-block.active { display: block; }
+  .c-comment { color: var(--muted); }
+  .c-key { color: var(--accent2); }
+  .c-val { color: var(--accent4); }
+  .c-str { color: #98d986; }
+  .c-num { color: #d4a4ff; }
+  .c-cmd { color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 4rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--bg);
+  }
+  footer span { color: var(--accent2); }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 80px 1.5rem 3rem; }
+    section { padding: 3rem 1.5rem; }
+    .arch-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    footer { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">$ app-translator <span style="color:var(--muted)">// devops</span></div>
+  <ul class="nav-links">
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#steps">Steps</a></li>
+    <li><a href="#stack">Tech Stack</a></li>
+    <li><a href="#code">Code</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="grid-overlay"></div>
+  <div class="hero-content fade-in">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      DevOps Final Project
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;letter-spacing:-0.01em;line-height:1.1;margin-bottom:0.3rem;">
+        Esther Genauer
+      </div>
+      <div style="font-family:var(--mono);font-size:0.85rem;color:var(--accent2);letter-spacing:0.12em;text-transform:uppercase;">
+        DevOps Engineer
+      </div>
+    </div>
+    <h1>App<br><span>Translator</span></h1>
+    <p>
+      פרויקט DevOps מלא — מ-Dockerfile ועד Kubernetes,<br>
+      Helm Charts ו-CI/CD Pipeline אוטומטי בענן.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Microservices</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">K8s Nodes</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">17+</span>
+        <span class="stat-label">Pipeline Steps</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">2</span>
+        <span class="stat-label">Cloud Platforms</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="arch-section" id="architecture">
+  <div class="section-header fade-in">
+    <div class="section-label">01 // Architecture</div>
+    <h2 class="section-title">System Architecture</h2>
+  </div>
+  <div class="arch-diagram fade-in">
+    <div class="arch-grid">
+      <div class="arch-box">
+        <span class="arch-box-port">:8080</span>
+        <span class="arch-box-icon">🌐</span>
+        <div class="arch-box-name">Frontend</div>
+        <div class="arch-box-desc">Nginx · Static files · HTML/CSS/JS</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--accent);font-family:var(--mono)">→</div>
+      <div class="arch-box">
+        <span class="arch-box-port">:3001</span>
+        <span class="arch-box-icon">⚙️</span>
+        <div class="arch-box-name">Backend</div>
+        <div class="arch-box-desc">Node.js · Express API · Logic Layer</div>
+      </div>
+      <div class="arch-box">
+        <span class="arch-box-port">:5432</span>
+        <span class="arch-box-icon">🗄️</span>
+        <div class="arch-box-name">PostgreSQL</div>
+        <div class="arch-box-desc">Translations history · Persistent storage</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="arch-box" style="text-align:left;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem">
+          <span style="font-size:1.2rem">🔄</span>
+          <span class="arch-box-name">LibreTranslate</span>
+          <span class="arch-box-port" style="position:static;font-size:0.6rem;padding:2px 6px;border-radius:4px;background:var(--accent);color:white;font-family:var(--mono)">:5000</span>
+        </div>
+        <div class="arch-box-desc">Open-source translation engine · Backend → Translator → Result</div>
+      </div>
+      <div class="arch-box" style="text-align:left;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem">
+          <span style="font-size:1.2rem">🔀</span>
+          <span class="arch-box-name">Ingress / Load Balancer</span>
+        </div>
+        <div class="arch-box-desc">Nginx Ingress Controller · translator.local · Path-based routing</div>
+      </div>
+    </div>
+    <div class="arch-network">
+      <span>🌐</span>
+      <span>appnet — shared Docker / Kubernetes network connecting all services</span>
+    </div>
+  </div>
+</section>
+
+<!-- CI/CD PIPELINE -->
+<section class="pipeline-section" id="pipeline">
+  <div class="section-header fade-in">
+    <div class="section-label">02 // CI/CD</div>
+    <h2 class="section-title">GitHub Actions Pipeline</h2>
+  </div>
+  <div class="pipeline fade-in">
+    <div class="pipeline-stage">
+      <div class="stage-num">01 / unit-tests</div>
+      <div class="stage-name">Unit Tests</div>
+      <div class="stage-desc">Node.js test runner · server.test.js · בדיקות לוגיקה</div>
+      <span class="stage-badge badge-test">npm test</span>
+      <div class="arrow-connect">›</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-num">02 / build</div>
+      <div class="stage-name">Docker Build</div>
+      <div class="stage-desc">docker/build-push-action · tagged by commit SHA · no push yet</div>
+      <span class="stage-badge badge-build">needs: unit-tests</span>
+      <div class="arrow-connect">›</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-num">03 / integration</div>
+      <div class="stage-name">Integration Tests</div>
+      <div class="stage-desc">docker-compose.test.yml · full stack · server.integration.test.js</div>
+      <span class="stage-badge badge-test">needs: build</span>
+      <div class="arrow-connect">›</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-num">04 / push</div>
+      <div class="stage-name">Push to Hub</div>
+      <div class="stage-desc">DockerHub login · :latest + :sha tags · main branch only</div>
+      <span class="stage-badge badge-push">needs: integration</span>
+      <div class="arrow-connect">›</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-num">05 / deploy</div>
+      <div class="stage-name">Deploy</div>
+      <div class="stage-desc">Backend → EC2 via SSH · Frontend → S3 + CloudFront invalidation</div>
+      <span class="stage-badge badge-deploy">needs: push</span>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem;padding:1rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-family:var(--mono);font-size:0.75rem;color:var(--muted);display:flex;align-items:center;gap:1rem;flex-wrap:wrap;" class="fade-in">
+    <span style="color:var(--accent2)">● OIDC Auth</span>
+    <span>GitHub → AWS (ללא access keys)</span>
+    <span style="margin-left:auto;color:var(--accent4)">● Auto-tag</span>
+    <span>v1.0.0 → v1.0.1 → v1.0.2 בכל push מוצלח</span>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section" id="steps">
+  <div class="section-header fade-in">
+    <div class="section-label">03 // Journey</div>
+    <h2 class="section-title">Project Steps</h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card git fade-in">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Git & GitHub</div>
+      <div class="step-desc">יצירת repository, branch strategy, feature branches, merge conflicts</div>
+      <div class="step-tags">
+        <span class="tag">main branch</span>
+        <span class="tag">backend-dockerfile</span>
+        <span class="tag">git merge</span>
+      </div>
+    </div>
+    <div class="step-card docker fade-in">
+      <div class="step-num">Step 02–03</div>
+      <div class="step-title">Dockerfile × 2</div>
+      <div class="step-desc">Backend: node:18-alpine · Frontend: nginx:alpine · multi-stage build, port exposure</div>
+      <div class="step-tags">
+        <span class="tag">WORKDIR</span>
+        <span class="tag">COPY</span>
+        <span class="tag">EXPOSE</span>
+        <span class="tag">CMD</span>
+      </div>
+    </div>
+    <div class="step-card compose fade-in">
+      <div class="step-num">Step 04–06</div>
+      <div class="step-title">Docker Compose</div>
+      <div class="step-desc">4 services, shared network, volumes for PostgreSQL, environment variables, health checks</div>
+      <div class="step-tags">
+        <span class="tag">depends_on</span>
+        <span class="tag">volumes</span>
+        <span class="tag">networks</span>
+        <span class="tag">env_file</span>
+      </div>
+    </div>
+    <div class="step-card k8s fade-in">
+      <div class="step-num">Step 08–15</div>
+      <div class="step-title">Kubernetes (Minikube)</div>
+      <div class="step-desc">3-node cluster, Deployments, Services, StatefulSet, PVC, ConfigMap, Secret, Ingress</div>
+      <div class="step-tags">
+        <span class="tag">ClusterIP</span>
+        <span class="tag">LoadBalancer</span>
+        <span class="tag">StatefulSet</span>
+        <span class="tag">PVC</span>
+      </div>
+    </div>
+    <div class="step-card helm fade-in">
+      <div class="step-num">Step 17</div>
+      <div class="step-title">Helm Charts</div>
+      <div class="step-desc">הפיכת כל ה-YAML לתבניות דינמיות, values.yaml, Bitnami PostgreSQL dependency, Sealed Secrets</div>
+      <div class="step-tags">
+        <span class="tag">{{ .Values }}</span>
+        <span class="tag">helm upgrade</span>
+        <span class="tag">helm rollback</span>
+        <span class="tag">kubeseal</span>
+      </div>
+    </div>
+    <div class="step-card ci fade-in">
+      <div class="step-num">CI/CD</div>
+      <div class="step-title">GitHub Actions</div>
+      <div class="step-desc">Backend → DockerHub → EC2. Frontend → S3 + CloudFront. OIDC auth, auto-tagging, rollback</div>
+      <div class="step-tags">
+        <span class="tag">OIDC</span>
+        <span class="tag">S3 sync</span>
+        <span class="tag">CloudFront</span>
+        <span class="tag">EC2 SSH</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="tech-section" id="stack">
+  <div class="section-header fade-in">
+    <div class="section-label">04 // Tech Stack</div>
+    <h2 class="section-title">Technologies Used</h2>
+  </div>
+  <div class="tech-grid fade-in">
+    <div class="tech-card"><div class="tech-icon">🐳</div><div class="tech-name">Docker</div><div class="tech-cat">Container</div></div>
+    <div class="tech-card"><div class="tech-icon">⎈</div><div class="tech-name">Kubernetes</div><div class="tech-cat">Orchestration</div></div>
+    <div class="tech-card"><div class="tech-icon">⛵</div><div class="tech-name">Helm</div><div class="tech-cat">Package Manager</div></div>
+    <div class="tech-card"><div class="tech-icon">🟢</div><div class="tech-name">Node.js</div><div class="tech-cat">Backend</div></div>
+    <div class="tech-card"><div class="tech-icon">🐘</div><div class="tech-name">PostgreSQL</div><div class="tech-cat">Database</div></div>
+    <div class="tech-card"><div class="tech-icon">🔁</div><div class="tech-name">GitHub Actions</div><div class="tech-cat">CI/CD</div></div>
+    <div class="tech-card"><div class="tech-icon">☁️</div><div class="tech-name">AWS S3</div><div class="tech-cat">Cloud Storage</div></div>
+    <div class="tech-card"><div class="tech-icon">⚡</div><div class="tech-name">CloudFront</div><div class="tech-cat">CDN</div></div>
+    <div class="tech-card"><div class="tech-icon">🖥️</div><div class="tech-name">EC2</div><div class="tech-cat">Compute</div></div>
+    <div class="tech-card"><div class="tech-icon">🌐</div><div class="tech-name">Nginx</div><div class="tech-cat">Web Server</div></div>
+    <div class="tech-card"><div class="tech-icon">🔒</div><div class="tech-name">Sealed Secrets</div><div class="tech-cat">Security</div></div>
+    <div class="tech-card"><div class="tech-icon">🔀</div><div class="tech-name">LibreTranslate</div><div class="tech-cat">Translation API</div></div>
+  </div>
+</section>
+
+<!-- CODE SHOWCASE -->
+<section class="code-section" id="code">
+  <div class="section-header fade-in">
+    <div class="section-label">05 // Code Samples</div>
+    <h2 class="section-title">Key Configuration Files</h2>
+  </div>
+  <div class="fade-in">
+    <div class="code-tabs">
+      <div class="code-tab active" onclick="showTab('compose')">docker-compose.yml</div>
+      <div class="code-tab" onclick="showTab('k8s')">k8s deployment</div>
+      <div class="code-tab" onclick="showTab('helm')">helm values</div>
+      <div class="code-tab" onclick="showTab('ci')">github actions</div>
+    </div>
+
+    <div class="code-block active" id="tab-compose">
+<span class="c-comment"># docker-compose.yml — 4 microservices</span>
+<span class="c-key">services</span>:
+  <span class="c-key">db</span>:
+    <span class="c-key">image</span>: <span class="c-str">postgres:15</span>
+    <span class="c-key">environment</span>:
+      <span class="c-key">POSTGRES_DB</span>: <span class="c-val">translations</span>
+      <span class="c-key">POSTGRES_USER</span>: <span class="c-val">postgres</span>
+      <span class="c-key">POSTGRES_PASSWORD</span>: <span class="c-val">postgres</span>
+    <span class="c-key">volumes</span>:
+      - <span class="c-str">postgres_data:/var/lib/postgresql/data</span>
+      - <span class="c-str">./init.sql:/docker-entrypoint-initdb.d/init.sql</span>
+
+  <span class="c-key">backend</span>:
+    <span class="c-key">build</span>: <span class="c-str">./backend</span>
+    <span class="c-key">ports</span>: [<span class="c-str">"3001:3001"</span>]
+    <span class="c-key">environment</span>:
+      <span class="c-key">DATABASE_URL</span>: <span class="c-str">postgres://postgres:postgres@db:5432/translations</span>
+    <span class="c-key">depends_on</span>: [<span class="c-val">db</span>, <span class="c-val">translator</span>]
+
+  <span class="c-key">frontend</span>:
+    <span class="c-key">build</span>: <span class="c-str">./frontend</span>
+    <span class="c-key">ports</span>: [<span class="c-str">"8080:80"</span>]
+
+  <span class="c-key">translator</span>:
+    <span class="c-key">image</span>: <span class="c-str">libretranslate/libretranslate</span>
+    <span class="c-key">ports</span>: [<span class="c-str">"5000:5000"</span>]
+
+<span class="c-key">networks</span>:
+  <span class="c-key">appnet</span>: {}
+    </div>
+
+    <div class="code-block" id="tab-k8s">
+<span class="c-comment"># backend-deployment.yaml</span>
+<span class="c-key">apiVersion</span>: <span class="c-str">apps/v1</span>
+<span class="c-key">kind</span>: <span class="c-val">Deployment</span>
+<span class="c-key">metadata</span>:
+  <span class="c-key">name</span>: <span class="c-str">backend</span>
+<span class="c-key">spec</span>:
+  <span class="c-key">replicas</span>: <span class="c-num">2</span>
+  <span class="c-key">selector</span>:
+    <span class="c-key">matchLabels</span>:
+      <span class="c-key">app</span>: <span class="c-val">backend</span>
+  <span class="c-key">template</span>:
+    <span class="c-key">spec</span>:
+      <span class="c-key">containers</span>:
+      - <span class="c-key">name</span>: <span class="c-str">backend</span>
+        <span class="c-key">image</span>: <span class="c-str">myuser/app-translator-backend:latest</span>
+        <span class="c-key">ports</span>:
+        - <span class="c-key">containerPort</span>: <span class="c-num">3001</span>
+        <span class="c-key">env</span>:
+        - <span class="c-key">name</span>: <span class="c-str">DATABASE_URL</span>
+          <span class="c-key">value</span>: <span class="c-str">"postgres://postgres:postgres@postgres-0.postgres-service:5432/translations"</span>
+        <span class="c-key">livenessProbe</span>:
+          <span class="c-key">httpGet</span>:
+            <span class="c-key">path</span>: <span class="c-str">/health</span>
+            <span class="c-key">port</span>: <span class="c-num">3001</span>
+          <span class="c-key">initialDelaySeconds</span>: <span class="c-num">30</span>
+        <span class="c-key">readinessProbe</span>:
+          <span class="c-key">httpGet</span>:
+            <span class="c-key">path</span>: <span class="c-str">/health</span>
+            <span class="c-key">port</span>: <span class="c-num">3001</span>
+          <span class="c-key">initialDelaySeconds</span>: <span class="c-num">10</span>
+    </div>
+
+    <div class="code-block" id="tab-helm">
+<span class="c-comment"># helm/app-translator/values.yaml</span>
+<span class="c-key">backend</span>:
+  <span class="c-key">image</span>: <span class="c-str">myuser/app-translator-backend:latest</span>
+  <span class="c-key">replicas</span>: <span class="c-num">2</span>
+  <span class="c-key">port</span>: <span class="c-num">3001</span>
+
+<span class="c-key">frontend</span>:
+  <span class="c-key">image</span>: <span class="c-str">myuser/app-translator-frontend:latest</span>
+  <span class="c-key">replicas</span>: <span class="c-num">2</span>
+  <span class="c-key">port</span>: <span class="c-num">80</span>
+
+<span class="c-key">translator</span>:
+  <span class="c-key">image</span>: <span class="c-str">libretranslate/libretranslate:latest</span>
+  <span class="c-key">replicas</span>: <span class="c-num">1</span>
+  <span class="c-key">port</span>: <span class="c-num">5000</span>
+  <span class="c-key">resources</span>:
+    <span class="c-key">requests</span>: { <span class="c-key">memory</span>: <span class="c-str">"1Gi"</span>, <span class="c-key">cpu</span>: <span class="c-str">"500m"</span> }
+    <span class="c-key">limits</span>:  { <span class="c-key">memory</span>: <span class="c-str">"4Gi"</span>, <span class="c-key">cpu</span>: <span class="c-str">"2000m"</span> }
+
+<span class="c-key">postgresql</span>:                  <span class="c-comment"># Bitnami chart dependency</span>
+  <span class="c-key">auth</span>:
+    <span class="c-key">database</span>: <span class="c-str">translations</span>
+    <span class="c-key">existingSecret</span>: <span class="c-str">postgres-password</span>  <span class="c-comment"># Sealed Secret</span>
+
+<span class="c-key">ingress</span>:
+  <span class="c-key">enabled</span>: <span class="c-val">true</span>
+  <span class="c-key">host</span>: <span class="c-str">translator.local</span>
+
+<span class="c-comment"># Deploy: helm install app-translator ./helm/app-translator</span>
+<span class="c-comment"># Upgrade: helm upgrade app-translator ./helm/app-translator</span>
+<span class="c-comment"># Rollback: helm rollback app-translator 1</span>
+    </div>
+
+    <div class="code-block" id="tab-ci">
+<span class="c-comment"># .github/workflows/ci-backend.yml</span>
+<span class="c-key">name</span>: <span class="c-str">CI Backend</span>
+<span class="c-key">on</span>:
+  <span class="c-key">push</span>:
+    <span class="c-key">branches</span>: [<span class="c-str">main</span>, <span class="c-str">ci/cd</span>]
+    <span class="c-key">paths</span>: [<span class="c-str">'backend/**'</span>]
+
+<span class="c-key">jobs</span>:
+  <span class="c-key">unit-tests</span>:
+    <span class="c-key">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+    <span class="c-key">steps</span>:
+      - <span class="c-key">uses</span>: <span class="c-str">actions/checkout@v4</span>
+      - <span class="c-key">run</span>: <span class="c-cmd">npm ci && npm test</span>
+        <span class="c-key">working-directory</span>: <span class="c-str">./backend</span>
+
+  <span class="c-key">push</span>:
+    <span class="c-key">needs</span>: [<span class="c-val">build</span>, <span class="c-val">integration-tests</span>]
+    <span class="c-key">steps</span>:
+      - <span class="c-key">name</span>: <span class="c-str">Login to DockerHub</span>
+        <span class="c-key">uses</span>: <span class="c-str">docker/login-action@v3</span>
+        <span class="c-key">with</span>:
+          <span class="c-key">username</span>: <span class="c-str">${{ secrets.DOCKERHUB_USERNAME }}</span>
+          <span class="c-key">password</span>: <span class="c-str">${{ secrets.DOCKERHUB_TOKEN }}</span>
+      - <span class="c-key">name</span>: <span class="c-str">Build and push</span>
+        <span class="c-key">uses</span>: <span class="c-str">docker/build-push-action@v5</span>
+        <span class="c-key">with</span>:
+          <span class="c-key">push</span>: <span class="c-val">true</span>
+          <span class="c-key">tags</span>: |
+            <span class="c-str">myuser/app-translator-backend:latest</span>
+            <span class="c-str">myuser/app-translator-backend:${{ github.sha }}</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built with <span>DevOps love</span> · Docker · Kubernetes · Helm · GitHub Actions · AWS
+</footer>
+
+<script>
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Code tabs
+  function showTab(id) {
+    document.querySelectorAll('.code-tab').forEach((t, i) => {
+      const tabs = ['compose', 'k8s', 'helm', 'ci'];
+      t.classList.toggle('active', tabs[i] === id);
+    });
+    document.querySelectorAll('.code-block').forEach(b => {
+      b.classList.toggle('active', b.id === 'tab-' + id);
+    });
+  }
+</script>
+</body>
+</html>

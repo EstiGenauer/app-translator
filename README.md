@@ -151,5 +151,3 @@ Security: Sensitive data managed via Kubernetes Secrets.
 
 Project developed as part of DevOps Engineering studies.
 
-
-בהצלחה עם הדחיפה ל-Git! אם תצטרכי עזרה נוספת עם ה-Helm או ה-CI/CD, אני כאן.

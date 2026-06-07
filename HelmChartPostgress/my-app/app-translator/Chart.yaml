@@ -1,4 +1,3 @@
-
 apiVersion: v2
 name: app-translator
 description: Application for translating text
@@ -9,3 +8,9 @@ appVersion: "1.0.0"
 maintainers:
   - name: Esti Genauer
     email: genauer1997@gmail.com
+
+
+dependencies:
+  - name: postgresql
+    version: 12.x.x 
+    repository: https://charts.bitnami.com/bitnami

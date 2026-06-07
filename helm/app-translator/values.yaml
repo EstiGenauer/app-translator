@@ -17,7 +17,7 @@ translator:
      memory: "1Gi"
      cpu: "500m"
    limits:
-     memory: "4Gi"
+     memory: "512Mi"
      cpu: "2000m"
 
 database:

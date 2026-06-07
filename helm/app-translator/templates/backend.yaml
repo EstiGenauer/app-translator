@@ -39,7 +39,7 @@ spec:
 
         env:
         - name: DATABASE_URL
-          value: "postgres://postgres:postgres@postgres-service:5432/translations"
+          value: "postgres://postgres:postgres@app-translator-postgresql:5432/translations"
         - name: TRANSLATOR_HOST
           value: "translator-service"
 ---

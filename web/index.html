@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esther Genauer — DevOps Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:     #080c12;
+    --bg2:    #0d1220;
+    --bg3:    #111827;
+    --border: rgba(255,255,255,0.06);
+    --border2:rgba(255,255,255,0.13);
+    --text:   #dde3f0;
+    --muted:  #5a6a8a;
+    --green:  #00e5a0;
+    --blue:   #4f8cff;
+    --purple: #a78bfa;
+    --orange: #f59e0b;
+    --red:    #f87171;
+    --mono:   'JetBrains Mono', monospace;
+    --sans:   'Syne', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 2px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem;
+    background: rgba(8,12,18,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-id {
+    font-family: var(--mono); font-size: 0.78rem;
+    color: var(--green); letter-spacing: 0.08em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--muted); text-decoration: none;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-gh {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--bg); background: var(--green);
+    padding: 5px 14px; border-radius: 4px;
+    text-decoration: none; font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .nav-gh:hover { opacity: 0.85; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 80px 3rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse 70% 70% at 30% 50%, black 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .hero-glow {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 60%, rgba(0,229,160,0.06) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 35% at 20% 20%, rgba(79,140,255,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 30% at 80% 80%, rgba(167,139,250,0.04) 0%, transparent 60%);
+  }
+  .hero-inner {
+    position: relative; z-index: 1;
+    max-width: 700px; width: 100%;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .hero-left { width: 100%; }
+  .hero-status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--green);
+    border: 1px solid rgba(0,229,160,0.25);
+    padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+  .blink { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 800; line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    color: #ffffff;
+  }
+  .hero-title {
+    font-family: var(--mono); font-size: 0.85rem;
+    color: var(--green); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .hero-bio {
+    font-size: 0.95rem; color: var(--muted); line-height: 1.8;
+    max-width: 520px; margin: 0 auto 2rem;
+  }
+  .hero-bio strong { color: var(--text); font-weight: 600; }
+  .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: var(--bg);
+    font-family: var(--mono); font-size: 0.75rem; font-weight: 500;
+    padding: 10px 22px; border-radius: 6px;
+    text-decoration: none; letter-spacing: 0.05em;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border2); color: var(--text);
+    font-family: var(--mono); font-size: 0.75rem;
+    padding: 10px 22px; border-radius: 6px;
+    text-decoration: none; letter-spacing: 0.05em;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+  /* HERO RIGHT - terminal */
+  .terminal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+  .terminal-bar {
+    background: var(--bg3);
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot-r { width:10px;height:10px;border-radius:50%;background:#ff5f57; }
+  .dot-y { width:10px;height:10px;border-radius:50%;background:#febc2e; }
+  .dot-g { width:10px;height:10px;border-radius:50%;background:#28c840; }
+  .terminal-title { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); margin-left: auto; }
+  .terminal-body { padding: 1.25rem 1.5rem; font-family: var(--mono); font-size: 0.75rem; line-height: 1.9; }
+  .t-prompt { color: var(--green); }
+  .t-cmd { color: var(--text); }
+  .t-out { color: var(--muted); }
+  .t-key { color: var(--blue); }
+  .t-val { color: var(--orange); }
+  .t-str { color: #86efac; }
+  .t-comment { color: #374151; }
+  .t-cursor { display: inline-block; width: 8px; height: 14px; background: var(--green); vertical-align: middle; animation: blink 1s step-end infinite; }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 5rem 3rem; }
+  .section-wrap { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--green); letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, rgba(0,229,160,0.3), transparent); }
+  .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2.5rem; }
+
+  /* ─── SKILLS GRID ─── */
+  .skills-section { background: var(--bg2); }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; }
+  .skill-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 0.75rem;
+    text-align: center;
+    transition: border-color 0.25s, transform 0.25s;
+    cursor: default;
+  }
+  .skill-chip:hover { border-color: var(--green); transform: translateY(-2px); }
+  .skill-icon { font-size: 1.3rem; margin-bottom: 0.4rem; display: block; }
+  .skill-name { font-size: 0.72rem; font-weight: 600; margin-bottom: 0.15rem; }
+  .skill-cat { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); }
+
+  /* ─── ARCHITECTURE ─── */
+  .arch-section { background: var(--bg); }
+  .arch-container {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .arch-container::before {
+    content:''; position:absolute; top:0;left:0;right:0;height:2px;
+    background: linear-gradient(90deg, var(--green), var(--blue), var(--purple));
+  }
+
+  /* Docker Compose arch */
+  .arch-title { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 1.5rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .arch-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .arch-box {
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 1rem 1.25rem;
+    min-width: 140px; text-align: center;
+    position: relative; transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .arch-box:hover { border-color: var(--green); transform: translateY(-2px); }
+  .arch-box-port {
+    position: absolute; top: -9px; right: 10px;
+    font-family: var(--mono); font-size: 0.55rem;
+    background: var(--blue); color: #fff;
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .arch-box-ico { font-size: 1.4rem; display:block; margin-bottom:0.3rem; }
+  .arch-box-name { font-family: var(--mono); font-size: 0.72rem; color: var(--green); margin-bottom:0.1rem; }
+  .arch-box-desc { font-size: 0.62rem; color: var(--muted); }
+  .arch-arrow { color: var(--muted); font-size: 1.2rem; flex-shrink: 0; }
+  .arch-network-badge {
+    margin-top: 1.25rem;
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.7rem; color: var(--orange);
+    background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px; padding: 0.6rem 1rem;
+  }
+
+  /* K8s arch */
+  .k8s-cluster {
+    background: rgba(79,140,255,0.04);
+    border: 1px dashed rgba(79,140,255,0.25);
+    border-radius: 14px; padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .k8s-cluster-label {
+    font-family: var(--mono); font-size: 0.6rem;
+    color: var(--blue); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .k8s-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; align-items: stretch; }
+  .k8s-box {
+    background: var(--bg2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    flex: 1; min-width: 120px;
+    position: relative; transition: border-color 0.2s;
+  }
+  .k8s-box:hover { border-color: var(--blue); }
+  .k8s-box-kind {
+    font-family: var(--mono); font-size: 0.55rem;
+    color: var(--blue); letter-spacing: 0.08em; margin-bottom: 0.25rem;
+  }
+  .k8s-box-name { font-size: 0.75rem; font-weight: 600; margin-bottom: 0.15rem; }
+  .k8s-box-desc { font-size: 0.62rem; color: var(--muted); }
+  .k8s-badge {
+    display: inline-block; font-family: var(--mono); font-size: 0.55rem;
+    padding: 2px 7px; border-radius: 4px; margin-top: 0.35rem;
+  }
+  .badge-dep { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+  .badge-svc { background: rgba(79,140,255,0.1); color: var(--blue); border: 1px solid rgba(79,140,255,0.2); }
+  .badge-ss  { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .badge-pvc { background: rgba(245,158,11,0.1); color: var(--orange); border: 1px solid rgba(245,158,11,0.2); }
+  .badge-cm  { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .badge-ing { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+  .badge-helm{ background: rgba(79,140,255,0.1); color: var(--blue); border: 1px solid rgba(79,140,255,0.2); }
+
+  /* ─── PIPELINE ─── */
+  .pipeline-section { background: var(--bg2); }
+  .pipeline-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .ptab {
+    font-family: var(--mono); font-size: 0.7rem;
+    padding: 6px 16px; border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .ptab.active { background: var(--green); color: var(--bg); border-color: var(--green); font-weight: 600; }
+  .ptab:hover:not(.active) { border-color: var(--border2); color: var(--text); }
+  .pipeline-view { display: none; }
+  .pipeline-view.active { display: block; }
+  .pipeline-stages {
+    display: flex; gap: 0; overflow-x: auto; padding-bottom: 0.5rem;
+  }
+  .stage {
+    flex: 1; min-width: 150px;
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 1.25rem 1rem; position: relative;
+    transition: background 0.2s;
+  }
+  .stage:first-child { border-radius: 10px 0 0 10px; }
+  .stage:last-child  { border-radius: 0 10px 10px 0; }
+  .stage + .stage { border-left: none; }
+  .stage:hover { background: var(--bg3); }
+  .stage-n { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .stage-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .stage-detail { font-size: 0.68rem; color: var(--muted); line-height: 1.5; }
+  .stage-tag {
+    display: inline-block; margin-top: 0.6rem;
+    font-family: var(--mono); font-size: 0.58rem;
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .st-green { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+  .st-blue  { background: rgba(79,140,255,0.1); color: var(--blue); border: 1px solid rgba(79,140,255,0.2); }
+  .st-orange{ background: rgba(245,158,11,0.1); color: var(--orange); border: 1px solid rgba(245,158,11,0.2); }
+  .st-red   { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .stage-arrow {
+    position: absolute; right: -13px; top: 50%;
+    transform: translateY(-50%); z-index: 10;
+    color: var(--green); font-size: 1.1rem;
+    background: var(--bg2);
+    width: 22px; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ─── COMING SOON ─── */
+  .coming-section { background: var(--bg3); }
+  .coming-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .coming-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+    position: relative; overflow: hidden;
+    opacity: 0.75; transition: opacity 0.2s, border-color 0.2s;
+  }
+  .coming-card:hover { opacity: 1; border-color: var(--border2); }
+  .coming-card::after {
+    content: 'COMING SOON';
+    position: absolute; top: 10px; right: -22px;
+    font-family: var(--mono); font-size: 0.5rem; font-weight: 700;
+    background: var(--orange); color: var(--bg);
+    padding: 2px 30px; transform: rotate(35deg);
+    letter-spacing: 0.08em;
+  }
+  .coming-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .coming-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .coming-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+
+  /* ─── GLOSSARY ─── */
+  .glossary-section { background: var(--bg); }
+  .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .glossary-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.1rem 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .glossary-card:hover { border-color: var(--border2); }
+  .g-term {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 500;
+    color: var(--green); margin-bottom: 0.35rem;
+  }
+  .g-def { font-size: 0.75rem; color: var(--muted); line-height: 1.6; }
+  .g-def strong { color: var(--text); font-weight: 500; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
+  }
+  footer a { color: var(--green); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ─── FADE IN ─── */
+  .fade { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .fade.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 1.25rem; }
+    .nav-links { display: none; }
+    section { padding: 3rem 1.25rem; }
+    footer { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-id">esther_genauer.devops</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#glossary">Key Concepts</a></li>
+    <li><a href="#more">More</a></li>
+  </ul>
+  <a class="nav-gh" href="https://github.com/EstiGenauer" target="_blank">⟶ GitHub</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-left fade">
+      <div class="hero-status"><span class="blink"></span>Open to opportunities</div>
+      <div class="hero-name">Esther<br>Genauer</div>
+      <div class="hero-title">// Junior DevOps Engineer</div>
+      <p class="hero-bio">
+        DevOps engineer with hands-on experience in <strong>CI/CD pipelines, Kubernetes,</strong> and <strong>cloud-native systems.</strong>
+        Skilled in Docker, Kubernetes, and AWS deployments. With strong logical thinking and high self-learning ability,
+        I enjoy problem-solving and exploring new technologies. Highly motivated to grow and develop in the DevOps field
+        and to gain practical experience in real-world environments.
+      </p>
+      <div class="hero-links">
+        <a class="btn-primary" href="https://github.com/EstiGenauer" target="_blank">⟶ View GitHub</a>
+        <a class="btn-ghost" href="mailto:genauer1997@gmail.com">✉ genauer1997@gmail.com</a>
+      </div>
+    </div>
+
+    <!-- TERMINAL — below, centered -->
+    <div class="terminal fade" style="transition-delay:0.2s;max-width:560px;width:100%;margin-top:2.5rem">
+      <div class="terminal-bar">
+        <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+        <div class="terminal-title">app-translator — kubectl</div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">kubectl get pods -n app-translator</span></div>
+        <div><span class="t-out">NAME                        READY   STATUS</span></div>
+        <div><span class="t-out">backend-7d9f8b6c4-x2kpl      </span><span class="t-str">1/1     Running</span></div>
+        <div><span class="t-out">backend-7d9f8b6c4-m9qvr      </span><span class="t-str">1/1     Running</span></div>
+        <div><span class="t-out">frontend-5c8d7f4b-j3lnx      </span><span class="t-str">1/1     Running</span></div>
+        <div><span class="t-out">postgres-0                   </span><span class="t-str">1/1     Running</span></div>
+        <div><span class="t-out">translator-6b4d9c7f-p8wkz    </span><span class="t-str">1/1     Running</span></div>
+        <div style="margin-top:0.5rem"><span class="t-prompt">$ </span><span class="t-cmd">helm list</span></div>
+        <div><span class="t-out">NAME            CHART           STATUS</span></div>
+        <div><span class="t-out">app-translator  app-tr-1.0.2    </span><span class="t-str">deployed</span></div>
+        <div style="margin-top:0.5rem"><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section" id="skills">
+  <div class="section-wrap">
+    <div class="section-label fade">04 // Stack</div>
+    <h2 class="section-title fade">Technologies & Tools</h2>
+    <div class="skills-grid fade">
+      <div class="skill-chip"><span class="skill-icon">🐳</span><div class="skill-name">Docker</div><div class="skill-cat">Container</div></div>
+      <div class="skill-chip"><span class="skill-icon">⎈</span><div class="skill-name">Kubernetes</div><div class="skill-cat">Orchestration</div></div>
+      <div class="skill-chip"><span class="skill-icon">⛵</span><div class="skill-name">Helm</div><div class="skill-cat">Package Mgr</div></div>
+      <div class="skill-chip"><span class="skill-icon">🔁</span><div class="skill-name">GitHub Actions</div><div class="skill-cat">CI/CD</div></div>
+      <div class="skill-chip"><span class="skill-icon">☁️</span><div class="skill-name">AWS S3</div><div class="skill-cat">Cloud Storage</div></div>
+      <div class="skill-chip"><span class="skill-icon">⚡</span><div class="skill-name">CloudFront</div><div class="skill-cat">CDN</div></div>
+      <div class="skill-chip"><span class="skill-icon">🖥️</span><div class="skill-name">EC2</div><div class="skill-cat">Compute</div></div>
+      <div class="skill-chip"><span class="skill-icon">🌐</span><div class="skill-name">Nginx</div><div class="skill-cat">Web Server</div></div>
+      <div class="skill-chip"><span class="skill-icon">🐘</span><div class="skill-name">PostgreSQL</div><div class="skill-cat">Database</div></div>
+      <div class="skill-chip"><span class="skill-icon">🔒</span><div class="skill-name">Sealed Secrets</div><div class="skill-cat">Security</div></div>
+      <div class="skill-chip"><span class="skill-icon">📊</span><div class="skill-name">Prometheus</div><div class="skill-cat">Monitoring</div></div>
+      <div class="skill-chip"><span class="skill-icon">📈</span><div class="skill-name">Grafana</div><div class="skill-cat">Observability</div></div>
+      <div class="skill-chip"><span class="skill-icon">🐍</span><div class="skill-name">Python</div><div class="skill-cat">Programming</div></div>
+      <div class="skill-chip"><span class="skill-icon">🐧</span><div class="skill-name">Linux</div><div class="skill-cat">OS</div></div>
+      <div class="skill-chip"><span class="skill-icon">🔀</span><div class="skill-name">Git</div><div class="skill-cat">Version Control</div></div>
+      <div class="skill-chip"><span class="skill-icon">🏗️</span><div class="skill-name">Terraform</div><div class="skill-cat">IaC</div></div>
+      <div class="skill-chip"><span class="skill-icon">🔷</span><div class="skill-name">Azure DevOps</div><div class="skill-cat">CI/CD</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="arch-section" id="architecture">
+  <div class="section-wrap">
+    <div class="section-label fade">02 // Architecture</div>
+    <h2 class="section-title fade">App Translator — System Design</h2>
+
+    <!-- Tabs -->
+    <div class="pipeline-tabs fade" style="margin-bottom:1.5rem">
+      <button class="ptab active" onclick="showArch('compose')">Docker Compose</button>
+      <button class="ptab" onclick="showArch('k8s')">Kubernetes</button>
+      <button class="ptab" onclick="showArch('aws')">AWS Cloud</button>
+    </div>
+
+    <!-- Docker Compose Architecture -->
+    <div id="arch-compose" class="arch-container fade">
+      <div class="arch-title">// docker-compose — 4 microservices on shared appnet</div>
+      <div class="arch-row">
+        <div class="arch-box">
+          <span class="arch-box-port">:8080</span>
+          <span class="arch-box-ico">🌐</span>
+          <div class="arch-box-name">frontend</div>
+          <div class="arch-box-desc">Nginx · Static HTML/CSS/JS</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box">
+          <span class="arch-box-port">:3001</span>
+          <span class="arch-box-ico">⚙️</span>
+          <div class="arch-box-name">backend</div>
+          <div class="arch-box-desc">Node.js · Express API</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box">
+          <span class="arch-box-port">:5000</span>
+          <span class="arch-box-ico">🔄</span>
+          <div class="arch-box-name">translator</div>
+          <div class="arch-box-desc">LibreTranslate engine</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box">
+          <span class="arch-box-port">:5432</span>
+          <span class="arch-box-ico">🗄️</span>
+          <div class="arch-box-name">db</div>
+          <div class="arch-box-desc">PostgreSQL · History</div>
+        </div>
+      </div>
+      <div class="arch-network-badge">
+        🌐 &nbsp; <strong>appnet</strong> — shared Docker bridge network connecting all 4 services · volumes: postgres_data + init.sql
+      </div>
+    </div>
+
+    <!-- K8s Architecture -->
+    <div id="arch-k8s" class="arch-container fade" style="display:none">
+      <div class="arch-title">// kubernetes — 3-node minikube cluster</div>
+      <div class="k8s-cluster">
+        <div class="k8s-cluster-label">⎈ Minikube Cluster (3 nodes: 1 control-plane + 2 workers)</div>
+        <!-- Row 1: Ingress -->
+        <div class="k8s-row">
+          <div class="k8s-box" style="border-color:rgba(0,229,160,0.3)">
+            <div class="k8s-box-kind">Ingress</div>
+            <div class="k8s-box-name">Nginx Ingress Controller</div>
+            <div class="k8s-box-desc">translator.local · path-based routing to frontend & backend</div>
+            <span class="k8s-badge badge-ing">Ingress</span>
+          </div>
+        </div>
+        <!-- Row 2: Frontend + Backend -->
+        <div class="k8s-row">
+          <div class="k8s-box">
+            <div class="k8s-box-kind">Deployment + Service</div>
+            <div class="k8s-box-name">Frontend</div>
+            <div class="k8s-box-desc">2 replicas · Nginx · port 80 · ClusterIP</div>
+            <span class="k8s-badge badge-dep">Deployment</span>
+            <span class="k8s-badge badge-svc">ClusterIP</span>
+          </div>
+          <div class="k8s-box">
+            <div class="k8s-box-kind">Deployment + Service</div>
+            <div class="k8s-box-name">Backend</div>
+            <div class="k8s-box-desc">2 replicas · Node.js · port 3001 · ClusterIP · liveness + readiness probes</div>
+            <span class="k8s-badge badge-dep">Deployment</span>
+            <span class="k8s-badge badge-svc">ClusterIP</span>
+          </div>
+          <div class="k8s-box">
+            <div class="k8s-box-kind">Deployment + Service</div>
+            <div class="k8s-box-name">Translator</div>
+            <div class="k8s-box-desc">1 replica · LibreTranslate · port 5000 · 4Gi RAM limit</div>
+            <span class="k8s-badge badge-dep">Deployment</span>
+            <span class="k8s-badge badge-svc">ClusterIP</span>
+          </div>
+        </div>
+        <!-- Row 3: DB StatefulSet -->
+        <div class="k8s-row">
+          <div class="k8s-box" style="border-color:rgba(167,139,250,0.3)">
+            <div class="k8s-box-kind">StatefulSet + Service + PVC</div>
+            <div class="k8s-box-name">PostgreSQL</div>
+            <div class="k8s-box-desc">postgres-0 · headless service · PersistentVolumeClaim for data · init.sql via ConfigMap</div>
+            <span class="k8s-badge badge-ss">StatefulSet</span>
+            <span class="k8s-badge badge-pvc">PVC</span>
+            <span class="k8s-badge badge-cm">ConfigMap</span>
+            <span class="k8s-badge badge-cm" style="background:rgba(248,113,113,0.1);color:var(--red);border-color:rgba(248,113,113,0.2)">Secret</span>
+          </div>
+          <div class="k8s-box" style="border-color:rgba(79,140,255,0.3); max-width:200px">
+            <div class="k8s-box-kind">Helm Chart</div>
+            <div class="k8s-box-name">app-translator</div>
+            <div class="k8s-box-desc">values.yaml · Bitnami PG dependency · Sealed Secrets · helm rollback</div>
+            <span class="k8s-badge badge-helm">Helm</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-network-badge" style="color:var(--blue);background:rgba(79,140,255,0.06);border-color:rgba(79,140,255,0.2)">
+        ⎈ &nbsp; All services communicate via Kubernetes DNS (service-name:port) · OIDC auth for CI/CD
+      </div>
+    </div>
+
+    <!-- AWS Architecture -->
+    <div id="arch-aws" class="arch-container fade" style="display:none">
+      <div class="arch-title">// aws cloud deployment</div>
+      <div class="arch-row" style="flex-wrap:wrap;gap:1rem">
+        <div class="arch-box" style="border-color:rgba(245,158,11,0.3)">
+          <span class="arch-box-ico">👤</span>
+          <div class="arch-box-name" style="color:var(--orange)">User</div>
+          <div class="arch-box-desc">Browser request</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box" style="border-color:rgba(0,229,160,0.3)">
+          <span class="arch-box-ico">⚡</span>
+          <div class="arch-box-name">CloudFront</div>
+          <div class="arch-box-desc">CDN · Global edge · HTTPS · OAC security</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box" style="border-color:rgba(0,229,160,0.3)">
+          <span class="arch-box-ico">☁️</span>
+          <div class="arch-box-name">S3 Bucket</div>
+          <div class="arch-box-desc">Frontend static files · Private · OAC access only</div>
+        </div>
+      </div>
+      <div class="arch-row" style="margin-top:0.75rem">
+        <div class="arch-box" style="border-color:rgba(79,140,255,0.3)">
+          <span class="arch-box-ico">🔁</span>
+          <div class="arch-box-name" style="color:var(--blue)">GitHub Actions</div>
+          <div class="arch-box-desc">CI/CD · OIDC auth to AWS · no access keys</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box" style="border-color:rgba(79,140,255,0.3)">
+          <span class="arch-box-ico">🖥️</span>
+          <div class="arch-box-name" style="color:var(--blue)">EC2 (Ubuntu)</div>
+          <div class="arch-box-desc">Backend · Docker Compose · SSH deploy · t2.micro</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box" style="border-color:rgba(79,140,255,0.3)">
+          <span class="arch-box-ico">🗃️</span>
+          <div class="arch-box-name" style="color:var(--blue)">DockerHub</div>
+          <div class="arch-box-desc">:latest + :sha tags · backend image registry</div>
+        </div>
+      </div>
+      <div class="arch-network-badge" style="margin-top:1rem">
+        🔒 &nbsp; CloudFront → S3 via OAC (no public S3) · GitHub OIDC → AWS IAM Role (no static keys) · CloudFront invalidation on every deploy
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="pipeline-section" id="pipeline">
+  <div class="section-wrap">
+    <div class="section-label fade">03 // CI/CD</div>
+    <h2 class="section-title fade">GitHub Actions Pipelines</h2>
+
+    <div class="pipeline-tabs fade">
+      <button class="ptab active" onclick="showPipe('full')">Full Pipeline</button>
+      <button class="ptab" onclick="showPipe('backend')">Backend CI</button>
+      <button class="ptab" onclick="showPipe('frontend')">Frontend CD</button>
+    </div>
+
+    <!-- Full pipeline -->
+    <div id="pipe-full" class="pipeline-view active fade">
+      <div class="pipeline-stages">
+        <div class="stage">
+          <div class="stage-n">01 / trigger</div>
+          <div class="stage-name">Push to main</div>
+          <div class="stage-detail">Push to main or ci/cd branch · path filter backend/**</div>
+          <span class="stage-tag st-green">on: push</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">02 / unit-tests</div>
+          <div class="stage-name">Unit Tests</div>
+          <div class="stage-detail">Node.js · npm ci && npm test · server.test.js logic checks</div>
+          <span class="stage-tag st-green">npm test</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">03 / build</div>
+          <div class="stage-name">Docker Build</div>
+          <div class="stage-detail">docker/build-push-action · tagged by commit SHA · no push yet</div>
+          <span class="stage-tag st-blue">needs: unit-tests</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">04 / integration</div>
+          <div class="stage-name">Integration Tests</div>
+          <div class="stage-detail">docker-compose.test.yml · full stack up · server.integration.test.js</div>
+          <span class="stage-tag st-green">needs: build</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">05 / push</div>
+          <div class="stage-name">Push to Hub</div>
+          <div class="stage-detail">DockerHub login · :latest + :sha tags · main branch only</div>
+          <span class="stage-tag st-orange">needs: integration</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">06 / deploy</div>
+          <div class="stage-name">Deploy</div>
+          <div class="stage-detail">Backend → EC2 via SSH · auto-tag v1.0.x on success</div>
+          <span class="stage-tag st-red">needs: push</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding:0.85rem 1.25rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);display:flex;gap:1.5rem;flex-wrap:wrap">
+        <span style="color:var(--green)">● OIDC Auth</span><span>GitHub → AWS (no static access keys)</span>
+        <span style="color:var(--orange)">● Auto-tag</span><span>v1.0.0 → v1.0.1 → v1.0.2 on every successful push</span>
+        <span style="color:var(--blue)">● Rollback</span><span>helm rollback app-translator 1</span>
+      </div>
+    </div>
+
+    <!-- Backend CI -->
+    <div id="pipe-backend" class="pipeline-view fade">
+      <div class="pipeline-stages">
+        <div class="stage">
+          <div class="stage-n">01</div>
+          <div class="stage-name">Checkout</div>
+          <div class="stage-detail">actions/checkout@v4 · runs-on: ubuntu-latest</div>
+          <span class="stage-tag st-blue">actions/checkout</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">02</div>
+          <div class="stage-name">Unit Tests</div>
+          <div class="stage-detail">cd backend · npm ci · npm test · server.test.js</div>
+          <span class="stage-tag st-green">npm test</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">03</div>
+          <div class="stage-name">Build Image</div>
+          <div class="stage-detail">docker/build-push-action · push:false · tag by SHA</div>
+          <span class="stage-tag st-blue">build-push-action</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">04</div>
+          <div class="stage-name">Integration</div>
+          <div class="stage-detail">compose -f docker-compose.test.yml up · wait healthy · run integration tests</div>
+          <span class="stage-tag st-green">full stack</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">05</div>
+          <div class="stage-name">Push Hub</div>
+          <div class="stage-detail">docker/login-action · push :latest + :$sha · main branch only</div>
+          <span class="stage-tag st-orange">DockerHub</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">06</div>
+          <div class="stage-name">Deploy EC2</div>
+          <div class="stage-detail">appleboy/ssh-action · git pull · docker compose up -d --build</div>
+          <span class="stage-tag st-red">SSH → EC2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frontend CD -->
+    <div id="pipe-frontend" class="pipeline-view fade">
+      <div class="pipeline-stages">
+        <div class="stage">
+          <div class="stage-n">01</div>
+          <div class="stage-name">Checkout</div>
+          <div class="stage-detail">actions/checkout@v4 · path filter: frontend/**</div>
+          <span class="stage-tag st-blue">trigger</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">02</div>
+          <div class="stage-name">OIDC Auth</div>
+          <div class="stage-detail">aws-actions/configure-aws-credentials · OIDC role assumption · no keys</div>
+          <span class="stage-tag st-orange">OIDC → IAM</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">03</div>
+          <div class="stage-name">S3 Sync</div>
+          <div class="stage-detail">aws s3 sync ./frontend s3://bucket · --delete flag · static files</div>
+          <span class="stage-tag st-blue">aws s3 sync</span>
+          <div class="stage-arrow">›</div>
+        </div>
+        <div class="stage">
+          <div class="stage-n">04</div>
+          <div class="stage-name">Invalidate CDN</div>
+          <div class="stage-detail">cloudfront create-invalidation · --paths "/*" · instant global update</div>
+          <span class="stage-tag st-green">CloudFront</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding:0.85rem 1.25rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:0.7rem;color:var(--muted)">
+        <span style="color:var(--green)">● OAC</span>&nbsp; S3 is fully private — only CloudFront can read it &nbsp;·&nbsp;
+        <span style="color:var(--orange)">● Secret</span>&nbsp; CLOUDFRONT_DISTRIBUTION_ID stored in GitHub Secrets
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP / COMING SOON -->
+<section class="coming-section" id="roadmap">
+  <div class="section-wrap">
+    <div class="section-label fade">05 // Roadmap</div>
+    <h2 class="section-title fade">What's Coming Next</h2>
+    <div class="coming-grid">
+      <div class="coming-card fade">
+        <div class="coming-icon">🔄</div>
+        <div class="coming-name">ArgoCD</div>
+        <div class="coming-desc">GitOps-based continuous delivery · automatic sync from Git to cluster · drift detection</div>
+      </div>
+      <div class="coming-card fade">
+        <div class="coming-icon">📊</div>
+        <div class="coming-name">Grafana + Prometheus</div>
+        <div class="coming-desc">Full observability stack · custom dashboards · alerting rules · metrics scraping</div>
+      </div>
+      <div class="coming-card fade">
+        <div class="coming-icon">📋</div>
+        <div class="coming-name">EFK Stack</div>
+        <div class="coming-desc">Elasticsearch + Fluentd + Kibana · centralized log aggregation across all pods</div>
+      </div>
+      <div class="coming-card fade">
+        <div class="coming-icon">🏗️</div>
+        <div class="coming-name">Terraform</div>
+        <div class="coming-desc">Infrastructure as Code · EC2, S3, CloudFront, IAM — all provisioned from code</div>
+      </div>
+      <div class="coming-card fade">
+        <div class="coming-icon">🔒</div>
+        <div class="coming-name">Cert Manager + Secret Manager</div>
+        <div class="coming-desc">Automatic TLS certificates · AWS Secrets Manager integration · zero-trust secrets</div>
+      </div>
+      <div class="coming-card fade">
+        <div class="coming-icon">📄</div>
+        <div class="coming-name">Perfect README + AWS Diagrams</div>
+        <div class="coming-desc">Full architecture diagrams · AWS infra diagram · comprehensive project documentation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY CONCEPTS GLOSSARY -->
+<section class="glossary-section" id="glossary">
+  <div class="section-wrap">
+    <div class="section-label fade">06 // Concepts</div>
+    <h2 class="section-title fade">Key DevOps Concepts</h2>
+    <div class="glossary-grid">
+      <div class="glossary-card fade">
+        <div class="g-term">Docker & Containerization</div>
+        <div class="g-def">Packages an app and all its dependencies into an isolated <strong>container</strong> — runs identically everywhere. Each service (frontend, backend, DB, translator) gets its own Dockerfile with a base image, dependencies, and startup command.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">Docker Compose</div>
+        <div class="g-def">Defines and runs <strong>multi-container apps</strong> with a single YAML file. Services share a network (appnet), environment variables, volumes, and health checks — all orchestrated locally with one command.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">Kubernetes (K8s)</div>
+        <div class="g-def"><strong>Container orchestration</strong> — automatically schedules, scales, and heals containers. Key objects: Deployment (stateless apps), StatefulSet (databases), Service (networking), Ingress (external access), PVC (persistent storage).</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">Helm Charts</div>
+        <div class="g-def">The <strong>package manager for Kubernetes</strong>. Converts static YAML manifests into dynamic templates with values.yaml. Enables versioned releases, one-command upgrades, and instant rollback with <code>helm rollback</code>.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">CI/CD — GitHub Actions</div>
+        <div class="g-def"><strong>Continuous Integration & Deployment</strong>: every push triggers automated tests → Docker build → integration tests → push to registry → deploy to production. Zero manual steps from commit to live.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">StatefulSet vs Deployment</div>
+        <div class="g-def"><strong>Deployment</strong> is for stateless apps (any pod is interchangeable). <strong>StatefulSet</strong> is for databases — each pod has a stable identity (postgres-0) and its own persistent volume that survives restarts.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">Ingress & Load Balancer</div>
+        <div class="g-def">Ingress is an <strong>L7 HTTP router</strong> inside the cluster — routes requests by path or hostname to the right service. The Nginx Ingress Controller exposes the app at translator.local and handles path-based routing.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">AWS S3 + CloudFront + OAC</div>
+        <div class="g-def"><strong>S3</strong> stores static frontend files. <strong>CloudFront</strong> (CDN) serves them globally with caching. <strong>OAC</strong> (Origin Access Control) makes S3 fully private — only CloudFront can read it, blocking direct access.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">EC2 + Docker on Cloud</div>
+        <div class="g-def"><strong>EC2</strong> is a virtual Linux server on AWS. The backend runs inside a Docker container on EC2 — GitHub Actions SSHes in on every push, pulls the latest image, and restarts the container automatically.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">OIDC Authentication</div>
+        <div class="g-def"><strong>OpenID Connect</strong> lets GitHub Actions authenticate to AWS <em>without</em> storing static access keys. GitHub generates a short-lived token per job — dramatically more secure than long-lived credentials.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">Sealed Secrets</div>
+        <div class="g-def">Encrypts Kubernetes Secrets so they can be <strong>safely committed to Git</strong>. The kubeseal tool encrypts with the cluster's public key — only the cluster can decrypt. Solves the "secrets in git" problem.</div>
+      </div>
+      <div class="glossary-card fade">
+        <div class="g-term">Liveness & Readiness Probes</div>
+        <div class="g-def">Kubernetes health checks: <strong>Readiness</strong> — is the pod ready to receive traffic? <strong>Liveness</strong> — is the pod still alive? If liveness fails, K8s restarts the pod automatically. Both hit the /health endpoint.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MORE ABOUT ME -->
+<section style="background:var(--bg2)" id="more">
+  <div class="section-wrap">
+    <div class="section-label fade">07 // More</div>
+    <h2 class="section-title fade">More About Me</h2>
+    <p class="fade" style="color:var(--muted);font-size:0.9rem;max-width:680px;margin-bottom:2rem;line-height:1.8">
+      DevOps is my main focus, but I've picked up a lot along the way. Here's a broader picture of what I know and where I come from.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem">
+
+      <!-- Programming -->
+      <div class="glossary-card fade" style="border-color:rgba(0,229,160,0.15)">
+        <div class="g-term" style="margin-bottom:0.6rem">💻 Programming Languages</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--green)">Python</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(79,140,255,0.08);border:1px solid rgba(79,140,255,0.2);color:var(--blue)">C#</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(79,140,255,0.08);border:1px solid rgba(79,140,255,0.2);color:var(--blue)">Java</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(79,140,255,0.08);border:1px solid rgba(79,140,255,0.2);color:var(--blue)">C</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--orange)">HTML</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);color:var(--purple)">SQL</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);color:var(--purple)">SQL Server</span>
+        </div>
+      </div>
+
+      <!-- .NET Ecosystem -->
+      <div class="glossary-card fade" style="border-color:rgba(79,140,255,0.15)">
+        <div class="g-term" style="color:var(--blue);margin-bottom:0.6rem">🔷 .NET Ecosystem</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(79,140,255,0.08);border:1px solid rgba(79,140,255,0.2);color:var(--blue)">.NET</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(79,140,255,0.08);border:1px solid rgba(79,140,255,0.2);color:var(--blue)">WCF</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(79,140,255,0.08);border:1px solid rgba(79,140,255,0.2);color:var(--blue)">WPF</span>
+        </div>
+        <div class="g-def" style="margin-top:0.6rem">Windows-based enterprise development frameworks — gives me context for the apps I'm deploying</div>
+      </div>
+
+      <!-- QA & Testing -->
+      <div class="glossary-card fade" style="border-color:rgba(248,113,113,0.15)">
+        <div class="g-term" style="color:var(--red);margin-bottom:0.6rem">🧪 QA & Test Automation</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:var(--red)">Selenium</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:var(--red)">ISTQB Certified</span>
+        </div>
+        <div class="g-def" style="margin-top:0.6rem">International software testing certification + hands-on automated testing with Selenium — quality is part of how I think</div>
+      </div>
+
+      <!-- Automation & Low-code -->
+      <div class="glossary-card fade" style="border-color:rgba(0,229,160,0.15)">
+        <div class="g-term" style="margin-bottom:0.6rem">⚡ Automation & Low-Code</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--green)">n8n</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--green)">Salesforce</span>
+        </div>
+        <div class="g-def" style="margin-top:0.6rem">n8n workflow automation and Salesforce CRM — understanding business processes from end to end</div>
+      </div>
+
+      <!-- Business & Management -->
+      <div class="glossary-card fade" style="border-color:rgba(245,158,11,0.15)">
+        <div class="g-term" style="color:var(--orange);margin-bottom:0.6rem">📊 Business & Management</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--orange)">Product Management</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--orange)">Project Management</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--orange)">Excel Advanced</span>
+          <span style="font-family:var(--mono);font-size:0.65rem;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--orange)">Entrepreneurship</span>
+        </div>
+        <div class="g-def" style="margin-top:0.6rem">Studying towards a Mahat Industrial Engineering & Management diploma — covering accounting, economics, cost analysis & marketing. I understand the business side, not just the infrastructure.</div>
+      </div>
+
+      <!-- Education -->
+      <div class="glossary-card fade" style="border-color:rgba(167,139,250,0.15)">
+        <div class="g-term" style="color:var(--purple);margin-bottom:0.6rem">🎓 Education</div>
+        <div class="g-def" style="line-height:1.9">
+          <strong style="color:var(--text)">Mercaz Beit Yaakov (2024–2026)</strong><br>
+          DevOps & Technology Systems — Teaching Certificate Track<br><br>
+          <strong style="color:var(--text)">Pninei Chein High School</strong><br>
+          Full Bagrut with honors · Computer Science (11 units) · Math (5) · English (5)
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Soft Skills -->
+    <div class="fade" style="margin-top:1.5rem;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem 2rem">
+      <div style="font-family:var(--mono);font-size:0.68rem;color:var(--green);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem">// Soft Skills</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">⏱ Meets deadlines</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">🤝 Team player</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">💡 Analytical thinker</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">📚 Fast learner</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">🔧 Strong problem-solver</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">🎯 Works independently under pressure</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">🔄 Adaptable & flexible</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">💬 Clear communicator</span>
+        <span style="font-size:0.8rem;padding:6px 14px;border-radius:20px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--text)">🚀 Highly motivated to grow</span>
+      </div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div>
+    <span style="color:var(--green)">Esther Genauer</span> · Junior DevOps Engineer
+    · <a href="mailto:genauer1997@gmail.com">genauer1997@gmail.com</a>
+    · <a href="tel:0527627610">052-762-7610</a>
+  </div>
+  <div>
+    <a href="https://github.com/EstiGenauer" target="_blank">github.com/EstiGenauer</a>
+    &nbsp;·&nbsp; Built with Docker · Kubernetes · Helm · GitHub Actions · AWS
+  </div>
+</footer>
+
+<script>
+  // Fade-in observer
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+
+  // Pipeline tabs
+  function showPipe(id) {
+    document.querySelectorAll('.pipeline-view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.pipeline-tabs .ptab').forEach((b,i) => {
+      b.classList.toggle('active', ['full','backend','frontend'][i] === id);
+    });
+    document.getElementById('pipe-' + id).classList.add('active');
+  }
+
+  // Architecture tabs
+  function showArch(id) {
+    ['compose','k8s','aws'].forEach(a => {
+      document.getElementById('arch-' + a).style.display = a === id ? 'block' : 'none';
+    });
+    // update buttons — find parent ptab group
+    const tabs = document.querySelector('#architecture .pipeline-tabs');
+    tabs.querySelectorAll('.ptab').forEach((b,i) => {
+      b.classList.toggle('active', ['compose','k8s','aws'][i] === id);
+    });
+  }
+</script>
+</body>
+</html>

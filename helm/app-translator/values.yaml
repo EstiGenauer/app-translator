@@ -17,15 +17,29 @@ translator:
      memory: "1Gi"
      cpu: "500m"
    limits:
-     memory: "4Gi"
+     memory: "512Mi"
      cpu: "2000m"
 
 database:
- name: translations
- user: postgres
- password: postgres
- storage: 10Gi
+  name: translations
+  user: postgres
+  password: cG9zdGdyZXM=
+  storage: 10Gi
+  replicas: 1
 
+  image:
+    repository: postgres
+    tag: "15"
+    PullPolicy: IfNotPresent
+
+Volume:
+  init:
+    sql: |
+      CREATE TABLE IF NOT EXISTS translations (
+        id SERIAL PRIMARY KEY,
+        original_text TEXT,
+        translated_text TEXT
+      );
 ingress:
  enabled: true
  host: translator.local

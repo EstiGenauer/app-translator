@@ -1,67 +1,264 @@
-# app-translator
-הפרויקט הוא אפליקציית תרגום Full Stack המבוססת על ארכיטקטורת מיקרו־שירותים, ומנוהלת באמצעות כלי DevOps מודרניים.
-המערכת מאפשרת למשתמשים לתרגם טקסט בין שפות, לשמור היסטוריית תרגומים, ולהשתמש בממשק וובי נוח.
+# App Translator – DevOps Project 🌍
 
+## Overview
 
+This repository focuses on the DevOps, Infrastructure, CI/CD, Kubernetes, and AWS deployment of a translation application built using a microservices architecture.
 
-#  App Translator – DevOps Project
+The application enables users to translate text between languages, store translation history, and interact through a web interface.
 
-##  Overview
-This project is a full-stack translation application built using a microservices architecture and deployed with modern DevOps tools.
-The system allows users to translate text between languages, store translation history, and interact through a web interface.
+My contribution to this project focused on the DevOps and Cloud Engineering aspects, including containerization, orchestration, infrastructure automation, CI/CD pipelines, Kubernetes deployment, and AWS integration.
 
 ---
 
-##  Architecture
+## Architecture
 
-The system is composed of 4 microservices:
+The application consists of four services:
 
-### 1. Frontend
-- Static web application served via Nginx
-- Provides user interface for text translation
+### Frontend
 
-### 2. Backend (Node.js)
-- Handles API requests
-- Communicates with the Translator service
-- Stores translation history in PostgreSQL
+* Static web application served via Nginx
+* Provides the user interface for translation requests
 
-### 3. Database (PostgreSQL)
-- Stores translation records
-- Uses persistent storage (Volumes / PVC in Kubernetes)
+### Backend (Node.js)
 
-### 4. Translator (LibreTranslate)
-- External service responsible for translating text between languages
+* Handles API requests
+* Communicates with the Translator service
+* Stores translation history in PostgreSQL
 
----
+### Database (PostgreSQL)
 
-## ⚙️ Technologies Used
+* Stores translation records
+* Uses persistent storage through Volumes and Kubernetes PVCs
 
-- Docker & Docker Compose
-- Kubernetes (Minikube)
-- Node.js
-- PostgreSQL
-- Nginx
-- Git & GitHub
-- Terraform (basic exposure)
-- Linux
+### Translator (LibreTranslate)
+
+* Translation engine responsible for language translation
 
 ---
 
-## 🚀 Features
+## DevOps Responsibilities
 
-- Microservices architecture
-- Containerized services using Docker
-- Multi-container orchestration with Docker Compose
-- Kubernetes deployment (Deployments, Services, Ingress)
-- Persistent storage using PVC
-- Internal service communication via Kubernetes DNS
-- API testing using curl / Postman
-- Translation history stored in database
+### Containerization
+
+* Dockerized all application services
+* Multi-container orchestration using Docker Compose
+
+### Kubernetes
+
+* Deployments
+* Services
+* Ingress
+* Persistent Volume Claims (PVC)
+* Internal service communication via Kubernetes DNS
+
+### CI/CD
+
+* Automated build and deployment pipelines using GitHub Actions
+* Docker image build and push automation
+* Continuous Integration workflows for code validation
+
+### Cloud Infrastructure (AWS)
+
+* S3 for static frontend hosting
+* CloudFront for content delivery and caching
+* EC2 for backend deployment
+* IAM Roles and OIDC authentication for secure GitHub Actions integration
+* Automated deployment workflows from GitHub to AWS
+
+### Security
+
+* Kubernetes Secrets management
+* Secure authentication using AWS IAM and GitHub OIDC
 
 ---
 
-## 🐳 Running with Docker Compose
+## Technologies Used
 
-### Build and run all services:
+### Containerization
+
+* Docker
+* Docker Compose
+
+### Orchestration
+
+* Kubernetes (Minikube)
+* Helm Charts
+
+### CI/CD
+
+* GitHub Actions
+* GitHub
+
+### Cloud
+
+* AWS EC2
+* AWS S3
+* AWS CloudFront
+* AWS IAM
+* OIDC Federation
+
+### Backend
+
+* Node.js
+
+### Database
+
+* PostgreSQL
+
+### Web Server
+
+* Nginx
+
+### Operating System
+
+* Linux
+
+---
+
+## Features
+
+* Microservices Architecture
+* Dockerized Services
+* Docker Compose Local Environment
+* Kubernetes Deployment
+* Helm-based Application Packaging
+* Persistent Storage with PVC
+* Internal Kubernetes Networking
+* CI/CD Automation
+* Cloud Deployment on AWS
+* Secure Authentication with OIDC
+* Translation History Storage
+* Infrastructure as Code Principles
+
+---
+
+## Running Locally with Docker Compose
+
+Build and start all services:
+
+```bash
 docker compose build
 docker compose up -d
+```
+
+Verify running containers:
+
+```bash
+docker ps
+```
+
+---
+
+## Kubernetes Deployment
+
+Deploy the application using Kubernetes manifests:
+
+```bash
+kubectl apply -f k8s/
+```
+
+Or deploy using Helm:
+
+```bash
+helm dependency update ./helm/app-translator
+helm install app-translator ./helm/app-translator
+```
+
+Verify resources:
+
+```bash
+kubectl get pods
+kubectl get svc
+kubectl get ingress
+```
+
+---
+
+## CI/CD Pipeline
+
+### Continuous Integration (CI)
+
+Automatically triggered on:
+
+* Push
+* Pull Request
+
+Pipeline actions:
+
+* Build Docker images
+* Validate application configuration
+* Run automated checks
+
+### Continuous Deployment (CD)
+
+Deployment automation includes:
+
+* Docker image publishing
+* Kubernetes deployment updates
+* AWS deployment workflows
+* Infrastructure delivery automation
+
+---
+
+## Repository Structure
+
+```text
+.
+├── backend/                # Node.js API
+├── frontend/               # Static website and Nginx configuration
+├── helm/                   # Helm charts
+├── k8s/                    # Kubernetes manifests
+├── .github/workflows/      # GitHub Actions CI/CD pipelines
+├── docker-compose.yml      # Local development environment
+└── README.md
+```
+
+---
+
+## AWS Infrastructure
+
+### S3
+
+Hosts the static frontend application.
+
+### CloudFront
+
+Provides global content delivery and caching.
+
+### EC2
+
+Runs the backend application and related services.
+
+### IAM & OIDC
+
+Provides secure authentication between GitHub Actions and AWS without storing long-term access keys.
+
+---
+
+## Best Practices Applied
+
+* Microservices Architecture
+* Containerization
+* Infrastructure as Code (IaC)
+* CI/CD Automation
+* Cloud-Native Deployment
+* Persistent Data Management
+* Secure Secret Handling
+* Least Privilege Access Control
+* Automated Delivery Pipelines
+
+---
+
+## Project Goal
+
+This project was developed as part of DevOps Engineering studies to demonstrate practical experience with:
+
+* Docker
+* Kubernetes
+* Helm
+* GitHub Actions
+* AWS
+* CI/CD
+* Cloud Infrastructure
+* Microservices Deployment
+* Infrastructure Automation

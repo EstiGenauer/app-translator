@@ -28,7 +28,7 @@ flowchart TD
 | Secret | שימוש |
 |--------|--------|
 | `DOCKERHUB_USERNAME` | Push images |
-| `DOCKERHUB_TOKEN` | Push images |
+| `DOCKERHUBTOKEN` | Push images |
 | `AWS_ROLE_ARN` | OIDC ל-AWS |
 | `AWS_REGION` | אזור |
 | `S3_BUCKET_NAME` | Frontend bucket |

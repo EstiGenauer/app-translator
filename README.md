@@ -131,7 +131,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 | Secret | Purpose |
 |--------|---------|
 | `DOCKERHUB_USERNAME` | Docker image push |
-| `DOCKERHUB_TOKEN` | Docker image push |
+| `DOCKERHUBTOKEN` | Docker image push |
 | `AWS_ROLE_ARN` | OIDC authentication |
 | `AWS_REGION` | AWS region |
 | `S3_BUCKET_NAME` | Frontend bucket |

@@ -13,25 +13,25 @@ services:
     networks:
       - appnet
 
-
   translator:
     image: libretranslate/libretranslate
     ports:
       - "5000:5000"
-
+    networks:
+      - appnet
 
   backend:
     build: ./backend
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/translations
+      TRANSLATOR_HOST: translator
     ports:
       - "3001:3001"
     depends_on:
       - translator
       - db
     networks:
-    - appnet
-
+      - appnet
 
   frontend:
     build: ./frontend

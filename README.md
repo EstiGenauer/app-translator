@@ -1,191 +1,23 @@
-# App Translator – DevOps Project 🌍
+# App Translator – DevOps Project
 
 ## Overview
 
-This repository focuses on DevOps, Infrastructure, CI/CD, Kubernetes, Helm, and AWS deployment of a translation application built using a microservices architecture.
+אפליקציית תרגום מבוססת מיקרו-שירותים: Frontend, Backend (Node.js), Translator (LibreTranslate), ו-PostgreSQL.
 
-The application enables users to translate text between languages, store translation history, and interact through a web interface.
-
-My contribution focused on DevOps and Cloud Engineering aspects, including containerization, orchestration, infrastructure automation, CI/CD pipelines, Kubernetes deployment, Helm-based architecture, and AWS integration.
+הפרויקט מדגים: Docker, Kubernetes, Helm, CI/CD (GitHub Actions), AWS (S3, CloudFront, EC2, OIDC), Terraform, ו-Argo CD (GitOps).
 
 ---
 
 ## Architecture
 
-The application consists of four services:
+| Service | Role | Port |
+|---------|------|------|
+| Frontend | Nginx – static UI | 80 |
+| Backend | Node.js API | 3001 |
+| Translator | LibreTranslate engine | 5000 |
+| PostgreSQL | Translation history DB | 5432 |
 
-### Frontend
-- Static web application served via Nginx
-- Provides the user interface for translation requests
-
-### Backend (Node.js)
-- Handles API requests
-- Communicates with the Translator service
-- Stores translation history in PostgreSQL
-
-### Translator (LibreTranslate)
-- Translation engine responsible for language translation
-
-### Database (PostgreSQL)
-- Stores translation records
-- Managed via Helm-based deployment using Bitnami PostgreSQL chart integration
-
----
-
-## Deployment Architecture (Important)
-
-The system has two Helm-based implementations:
-
-### 1. Initial Helm Setup (Development Stage)
-- Basic Helm chart for application deployment
-- Used for early Kubernetes packaging and testing
-
-### 2. Production Helm Deployment (Final Stage)
-- Located in `HelmChartPostgress/`
-- Full-stack Helm deployment (application + PostgreSQL)
-- PostgreSQL is integrated using the Bitnami Helm chart
-- Single Helm release deploys the entire system
-
----
-
-## DevOps Responsibilities
-
-### Containerization
-- Dockerized all application services
-- Multi-container orchestration using Docker Compose
-
-### Kubernetes
-- Deployments
-- Services
-- Ingress
-- Persistent Volume Claims (PVC)
-- Internal service communication via Kubernetes DNS
-
-### Helm
-- Progressive migration from Kubernetes manifests to Helm
-- Implemented full-stack Helm deployment architecture
-- Managed PostgreSQL using Bitnami Helm dependency
-- Enabled single-command deployment of the entire system
-
-### CI/CD
-- Automated build and deployment pipelines using GitHub Actions
-- Docker image build and push automation
-- Continuous Integration workflows for validation and testing
-
-### Cloud Infrastructure (AWS)
-- S3 for static frontend hosting
-- CloudFront for global content delivery and caching
-- EC2 for backend services
-- IAM Roles and OIDC authentication for secure GitHub Actions integration
-- Automated deployment workflows from GitHub to AWS
-
-### Security
-- Kubernetes Secrets management
-- Secure authentication using AWS IAM and GitHub OIDC
-- Least privilege access principles
-
----
-
-## Technologies Used
-
-### Containerization
-- Docker
-- Docker Compose
-
-### Orchestration
-- Kubernetes (Minikube)
-- Helm (Full-stack deployment with dependencies)
-
-### CI/CD
-- GitHub Actions
-- GitHub
-
-### Cloud
-- AWS EC2
-- AWS S3
-- AWS CloudFront
-- AWS IAM
-- OIDC Federation
-
-### Backend
-- Node.js
-
-### Database
-- PostgreSQL
-
-### Web Server
-- Nginx
-
-### Operating System
-- Linux
-
----
-
-## Features
-
-- Microservices architecture
-- Full containerization with Docker
-- Kubernetes deployment
-- Helm-based full-stack deployment
-- PostgreSQL Helm dependency (Bitnami)
-- CI/CD automation with GitHub Actions
-- AWS cloud deployment
-- Infrastructure as Code (IaC)
-- Production-style deployment pipeline
-- Progressive evolution: Kubernetes → Helm → Helm full-stack architecture
-
----
-
-## Running Locally with Docker Compose
-
-```bash
-docker compose build
-docker compose up -d
-```
-
----
-
-## Kubernetes Deployment
-
-Deploy using Kubernetes manifests:
-
-```bash
-kubectl apply -f k8s/
-```
-
-Or deploy using Helm (initial setup):
-
-```bash
-helm dependency update ./helm/app-translator
-helm install app-translator ./helm/app-translator
-```
-
-Or deploy production Helm stack:
-
-```bash
-cd HelmChartPostgress/my-app
-helm dependency update
-helm install app-translator .
-```
-
----
-
-## CI/CD Pipeline
-
-### Continuous Integration (CI)
-Triggered on:
-- Push
-- Pull Request
-
-Steps:
-- Build Docker images
-- Validate configuration
-- Run automated checks
-
-### Continuous Deployment (CD)
-- Docker image publishing
-- Kubernetes deployment updates
-- AWS infrastructure deployment automation
+**תיעוד מפורט ודיאגרמות:** [`docs/architecture.md`](docs/architecture.md)
 
 ---
 
@@ -193,65 +25,154 @@ Steps:
 
 ```text
 .
-├── backend/
-├── frontend/
-├── helm/
-│   └── app-translator/        # Initial Helm setup (development)
-├── k8s/                       # Initial Kubernetes manifests (legacy)
-├── HelmChartPostgress/        # Production Helm full-stack deployment
-│   ├── helm/postgresql/       # Bitnami PostgreSQL dependency
-│   ├── my-app/                # Application Helm chart
-│   ├── charts/
-│   ├── templates/
-│   ├── Chart.yaml
-│   └── values.yaml
-├── .github/workflows/
-├── docker-compose.yml
+├── backend/                          # Node.js API
+├── frontend/                         # Nginx static site
+├── db/init.sql                       # DB schema
+├── docker-compose.yml                # Local development
+├── docker-compose.test.yaml          # CI integration tests
+├── k8s/                              # Kubernetes manifests (legacy)
+├── helm/app-translator/              # Helm chart – stage 1 (manual PostgreSQL)
+├── HelmChartPostgress/               # Helm chart – stage 2 (Bitnami PostgreSQL)
+│   ├── helm/postgresql/              # Local copy (reference only – not used in deploy)
+│   └── my-app/app-translator/        # Production Helm chart
+├── terraform/                        # AWS infrastructure (IaC)
+├── argocd/                           # Argo CD Application manifest
+├── docs/                             # Architecture docs & diagrams
+├── .github/workflows/                # CI/CD pipelines
 └── README.md
 ```
 
 ---
 
-## AWS Infrastructure
+## Quick Start
 
-### S3
-Hosts the static frontend application.
+### Docker Compose
 
-### CloudFront
-Provides global content delivery and caching.
+```bash
+docker compose build
+docker compose up -d
+# UI: http://localhost:8080
+curl -X POST http://localhost:3001/translate \
+  -H "Content-Type: application/json" \
+  -d '{"text":"hello","target":"he"}'
+```
 
-### EC2
-Runs backend services.
+### Kubernetes (manifests)
 
-### IAM & OIDC
-Secure authentication between GitHub Actions and AWS without long-term credentials.
+```bash
+minikube start --nodes 3 --driver=docker
+minikube addons enable ingress
+kubectl apply -f k8s/
+echo "$(minikube ip) translator.local" | sudo tee -a /etc/hosts
+```
+
+### Helm – Stage 1 (manual PostgreSQL)
+
+```bash
+helm lint ./helm/app-translator
+helm install app-translator ./helm/app-translator
+```
+
+### Helm – Stage 2 (Bitnami PostgreSQL) – Production
+
+```bash
+cd HelmChartPostgress/my-app/app-translator
+helm dependency update
+helm lint .
+helm install app-translator .
+```
+
+Expected pods: `app-translator-postgresql-0`, `backend`, `frontend`, `translator`
+
+Verify DB table:
+```bash
+kubectl exec app-translator-postgresql-0 -- \
+  bash -c "PGPASSWORD=postgres psql -U postgres -d translations -c '\dt'"
+```
+
+### Terraform (AWS)
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit github_org and other values
+terraform init
+terraform plan
+terraform apply
+```
+
+Outputs map to GitHub Secrets: `AWS_ROLE_ARN`, `S3_BUCKET_NAME`, `CLOUDFRONT_DISTRIBUTION_ID`
+
+### Argo CD (GitOps)
+
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd -f \
+  https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# Update repoURL in argocd/application.yaml to your repo
+kubectl apply -f argocd/application.yaml
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+# UI: https://localhost:8080
+```
 
 ---
 
-## Best Practices Applied
+## CI/CD Pipelines
 
-- Microservices Architecture
-- Containerization
-- Infrastructure as Code (IaC)
-- CI/CD Automation
-- Cloud-Native Deployment
-- Helm-based architecture
-- Secure secret handling
-- Least privilege access control
-- Progressive infrastructure evolution
+| Workflow | Trigger | Stages |
+|----------|---------|--------|
+| `ci-backend.yaml` | `backend/**` | Unit Tests → Build → Integration → Push DockerHub → Tag |
+| `ci-cd-frontend.yaml` | `frontend/**` | Build → S3 Deploy → CloudFront Invalidation |
+| `cd-backend.yaml` | After push | Deploy to EC2 via SSH |
+
+### Required GitHub Secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `DOCKERHUB_USERNAME` | Docker image push |
+| `DOCKERHUB_TOKEN` | Docker image push |
+| `AWS_ROLE_ARN` | OIDC authentication |
+| `AWS_REGION` | AWS region |
+| `S3_BUCKET_NAME` | Frontend bucket |
+| `CLOUDFRONT_DISTRIBUTION_ID` | Cache invalidation |
+| `EC2_HOST` / `EC2_SSH_KEY` | Backend deploy |
 
 ---
 
-## Project Goal
+## Technologies
 
-To demonstrate real-world DevOps engineering skills including:
+- **Containers:** Docker, Docker Compose
+- **Orchestration:** Kubernetes (Minikube), Helm
+- **CI/CD:** GitHub Actions, OIDC
+- **Cloud:** AWS S3, CloudFront, EC2, IAM
+- **IaC:** Terraform, Helm
+- **GitOps:** Argo CD
+- **Database:** PostgreSQL (manual StatefulSet + Bitnami chart)
 
-- Docker
-- Kubernetes
-- Helm (including full-stack Helm deployments)
-- GitHub Actions
-- AWS
-- CI/CD
-- Cloud Infrastructure
-- Microservices architecture
-- Infrastructure automation
+---
+
+## Known Fixes Applied
+
+See full list in [`docs/architecture.md`](docs/architecture.md#תיקונים-שבוצעו).
+
+Key HelmChartPostgress fixes:
+- PostgreSQL dependency version `18.5.1` (was `12.x.x`)
+- Added `postgresql` values (auth, initdb script, persistence)
+- Dynamic `DATABASE_URL` using `{{ .Release.Name }}-postgresql`
+- Ingress rewrite annotations for `/api` routing
+- Fixed `imagePullPolicy` on translator deployment
+
+---
+
+## Project Evolution
+
+```text
+Docker Compose → Kubernetes manifests → Helm (manual DB) → Helm + Bitnami PostgreSQL → CI/CD → AWS → Terraform → Argo CD
+```
+
+---
+
+## Maintainer
+
+Esti Genauer – genauer1997@gmail.com

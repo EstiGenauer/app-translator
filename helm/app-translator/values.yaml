@@ -1,45 +1,45 @@
 backend:
- image: estigenauer/app-backend:latest
- replicas: 2
- port: 3001
+  image: estigenauer/app-backend:latest
+  replicas: 2
+  port: 3001
 
 frontend:
- image: estigenauer/app-frontend:latest
- replicas: 2
- port: 80
+  image: estigenauer/app-frontend:latest
+  replicas: 2
+  port: 80
 
 translator:
- image: libretranslate/libretranslate:latest
- replicas: 1
- port: 5000
- resources:
-   requests:
-     memory: "1Gi"
-     cpu: "500m"
-   limits:
-     memory: "512Mi"
-     cpu: "2000m"
+  image: libretranslate/libretranslate:latest
+  replicas: 1
+  port: 5000
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
 
 database:
   name: translations
   user: postgres
-  password: cG9zdGdyZXM=
+  password: postgres
   storage: 10Gi
   replicas: 1
-
   image:
     repository: postgres
     tag: "15"
-    PullPolicy: IfNotPresent
+    pullPolicy: IfNotPresent
 
-Volume:
-  init:
-    sql: |
-      CREATE TABLE IF NOT EXISTS translations (
-        id SERIAL PRIMARY KEY,
-        original_text TEXT,
-        translated_text TEXT
-      );
+initSql: |
+  CREATE TABLE IF NOT EXISTS translations (
+    id SERIAL PRIMARY KEY,
+    source_text TEXT NOT NULL,
+    target_lang VARCHAR(10) NOT NULL,
+    translated_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT now()
+  );
+
 ingress:
- enabled: true
- host: translator.local
+  enabled: true
+  host: translator.local

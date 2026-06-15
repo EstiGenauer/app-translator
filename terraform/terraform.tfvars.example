@@ -1,0 +1,11 @@
+project_name = "app-translator"
+aws_region   = "us-east-1"
+github_org   = "YOUR_GITHUB_USERNAME"
+github_repo  = "app-translator"
+
+# Optional: set a globally unique bucket name
+# s3_bucket_name = "my-unique-app-translator-frontend"
+
+# Optional: create EC2 backend instance
+# ec2_key_name     = "app-translator-key"
+# allowed_ssh_cidr = "YOUR_PUBLIC_IP/32"

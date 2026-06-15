@@ -17,9 +17,9 @@ spec:
       containers:
       - name: backend
         image: {{ .Values.backend.image }}
+        imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.backend.port }}
-
         livenessProbe:
           httpGet:
             path: /health
@@ -27,7 +27,6 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
           failureThreshold: 5
-
         readinessProbe:
           httpGet:
             path: /ready
@@ -35,12 +34,9 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
           failureThreshold: 5
-          
-
-
         env:
         - name: DATABASE_URL
-          value: "postgres://postgres:postgres@app-translator-postgresql:5432/translations"
+          value: "postgres://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.auth.database }}"
         - name: TRANSLATOR_HOST
           value: "translator-service"
 ---
@@ -56,4 +52,3 @@ spec:
       port: {{ .Values.backend.port }}
       targetPort: {{ .Values.backend.port }}
   type: ClusterIP
-  

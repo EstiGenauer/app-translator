@@ -1,1 +1,39 @@
+services:
+  db-test:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: translations
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - testnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d translations"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
+  translator-test:
+    image: libretranslate/libretranslate
+    networks:
+      - testnet
+
+  backend-test:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db-test:5432/translations
+      TRANSLATOR_HOST: translator-test
+    depends_on:
+      db-test:
+        condition: service_healthy
+      translator-test:
+        condition: service_started
+    networks:
+      - testnet
+    command: >
+      sh -c "npm test && node server.test.js"
+
+networks:
+  testnet:
